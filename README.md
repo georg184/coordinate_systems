@@ -49,7 +49,7 @@ The app follows the established `trigonometric_functions` round model:
 - returning to the home screen preserves the current in-memory round
 - a full page reload starts fresh
 
-One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields.
+One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields. The inputs are enclosed in round parentheses and preceded by the same randomly selected vector symbol used in the drawing.
 
 ## Project Structure
 
@@ -81,7 +81,7 @@ The grid, vector, endpoints, arrowheads, and red coordinate axes are renderer-na
 
 ## Cache And Version Safety
 
-Current application version: `20260817.2`.
+Current application version: `20260817.3`.
 
 The version must remain identical in:
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.2';
+const APP_VERSION = '20260817.3';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -319,6 +319,7 @@ const controls = {
   magnitudeInfo: document.getElementById('magnitudeInfo'),
   answerForm: document.getElementById('answerForm'),
   answerLegend: document.getElementById('answerLegend'),
+  coordinateSymbol: document.getElementById('coordinateSymbol'),
   coordinateInputFrame: document.getElementById('coordinateInputFrame'),
   xCoordinateInput: document.getElementById('xCoordinateInput'),
   yCoordinateInput: document.getElementById('yCoordinateInput'),
@@ -788,8 +789,7 @@ function getSolutionContent(task) {
   if (!task.answer.possible) {
     return `<strong>${texts.solutionLead}</strong> ${texts.impossibleExplanation}`;
   }
-  const axes = task.dimension === 1 ? 'x' : 'x,y';
-  const formula = `\\left[\\vec{${task.vector.name.latex}}\\right]_{(${axes})}=${quizCore.coordinateVectorLatex(task)}`;
+  const formula = `\\vec{${task.vector.name.latex}}=${quizCore.coordinateVectorLatex(task)}`;
   let explanation;
   if (task.dimension === 1) {
     explanation = texts.possibleExplanation1d;
@@ -813,9 +813,14 @@ function refreshCurrentTaskLanguage() {
   if (!roundStarted) {
     clearMathContent(controls.taskQuestion);
     clearMathContent(controls.magnitudeInfo);
+    clearMathContent(controls.coordinateSymbol);
     return;
   }
   renderMath(controls.taskQuestion, getTaskQuestion(currentTask));
+  renderMath(
+    controls.coordinateSymbol,
+    `\\(\\vec{${currentTask.vector.name.latex}}=\\)`
+  );
   controls.magnitudeInfo.classList.toggle('hidden', !currentTask.showMagnitude);
   if (currentTask.showMagnitude) {
     renderMath(controls.magnitudeInfo, getMagnitudeInfo(currentTask));
@@ -941,6 +946,7 @@ function hideQuestionUntilRoundStart() {
   controls.nextButton.disabled = true;
   clearMathContentNow(controls.taskQuestion);
   clearMathContentNow(controls.magnitudeInfo);
+  clearMathContentNow(controls.coordinateSymbol);
   window.setTimeout(function() {
     controls.beginRoundButton.focus();
   }, 0);
@@ -951,6 +957,10 @@ function showCurrentQuestion() {
   controls.questionArea.classList.remove('hidden');
   setDimensionUi(currentTask);
   renderMath(controls.taskQuestion, getTaskQuestion(currentTask));
+  renderMath(
+    controls.coordinateSymbol,
+    `\\(\\vec{${currentTask.vector.name.latex}}=\\)`
+  );
   controls.magnitudeInfo.classList.toggle('hidden', !currentTask.showMagnitude);
   if (currentTask.showMagnitude) {
     renderMath(controls.magnitudeInfo, getMagnitudeInfo(currentTask));

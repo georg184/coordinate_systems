@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Interaktives Quiz zu Vektorkoordinaten in unterschiedlich orientierten Koordinatensystemen" />
   <title>Vektoren koordinatisieren</title>
-  <script>window.GG_APP_VERSION = '20260817.2';</script>
-  <link rel="stylesheet" href="css/styles.css?v=20260817.2" />
-  <script src="js/mathjax-config.js?v=20260817.2"></script>
+  <script>window.GG_APP_VERSION = '20260817.3';</script>
+  <link rel="stylesheet" href="css/styles.css?v=20260817.3" />
+  <script src="js/mathjax-config.js?v=20260817.3"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
-  <script src="js/quiz-core.js?v=20260817.2"></script>
+  <script src="js/quiz-core.js?v=20260817.3"></script>
 </head>
 <body>
   <div class="language-switcher" role="group" aria-label="Sprachauswahl">
@@ -92,19 +92,22 @@
             <form id="answerForm" class="answer-form">
               <fieldset class="answer-fieldset">
                 <legend id="answerLegend">Koordinatendarstellung</legend>
-                <div id="coordinateInputFrame" class="coordinate-input-frame dimension-two">
-                  <span class="coordinate-bracket bracket-left" aria-hidden="true"></span>
-                  <div class="coordinate-inputs">
-                    <label class="coordinate-input-label" for="xCoordinateInput">
-                      <span id="xCoordinateLabel" class="sr-only">x-Koordinate</span>
-                      <input id="xCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="x" />
-                    </label>
-                    <label id="yCoordinateInputLabel" class="coordinate-input-label" for="yCoordinateInput">
-                      <span id="yCoordinateLabel" class="sr-only">y-Koordinate</span>
-                      <input id="yCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="y" />
-                    </label>
+                <div class="coordinate-answer-entry">
+                  <span id="coordinateSymbol" class="coordinate-symbol mathjax-content"></span>
+                  <div id="coordinateInputFrame" class="coordinate-input-frame dimension-two">
+                    <span class="coordinate-parenthesis parenthesis-left" aria-hidden="true">(</span>
+                    <div class="coordinate-inputs">
+                      <label class="coordinate-input-label" for="xCoordinateInput">
+                        <span id="xCoordinateLabel" class="sr-only">x-Koordinate</span>
+                        <input id="xCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="x" />
+                      </label>
+                      <label id="yCoordinateInputLabel" class="coordinate-input-label" for="yCoordinateInput">
+                        <span id="yCoordinateLabel" class="sr-only">y-Koordinate</span>
+                        <input id="yCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="y" />
+                      </label>
+                    </div>
+                    <span class="coordinate-parenthesis parenthesis-right" aria-hidden="true">)</span>
                   </div>
-                  <span class="coordinate-bracket bracket-right" aria-hidden="true"></span>
                 </div>
 
                 <button id="impossibleButton" class="impossible-button" type="button" aria-pressed="false">Nicht koordinatisierbar</button>
@@ -135,8 +138,8 @@
     </section>
   </main>
 
-  <div class="version-badge" aria-label="Version">v2026.08.17.2</div>
+  <div class="version-badge" aria-label="Version">v2026.08.17.3</div>
 
-  <script src="js/app.js?v=20260817.2"></script>
+  <script src="js/app.js?v=20260817.3"></script>
 </body>
 </html>

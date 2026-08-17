@@ -446,12 +446,33 @@ p {
   font-weight: 800;
 }
 
+.coordinate-answer-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.coordinate-symbol {
+  flex: 0 0 auto;
+  min-width: 44px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1;
+  background: transparent;
+}
+
+.coordinate-symbol mjx-container {
+  margin: 0 !important;
+  background: transparent !important;
+}
+
 .coordinate-input-frame {
   display: grid;
-  grid-template-columns: 11px minmax(100px, 164px) 11px;
+  grid-template-columns: 17px minmax(100px, 164px) 17px;
   align-items: stretch;
   justify-content: start;
-  gap: 8px;
+  gap: 3px;
   min-height: 106px;
 }
 
@@ -483,19 +504,23 @@ p {
   text-align: center;
 }
 
-.coordinate-bracket {
-  display: block;
+.coordinate-parenthesis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 100%;
-  border-top: 2px solid var(--text);
-  border-bottom: 2px solid var(--text);
+  color: var(--text);
+  font-family: "Cambria Math", "STIX Two Math", "Times New Roman", serif;
+  font-size: 116px;
+  font-weight: 400;
+  line-height: 0.72;
+  transform: scaleX(0.62);
+  transform-origin: center;
+  user-select: none;
 }
 
-.bracket-left {
-  border-left: 2px solid var(--text);
-}
-
-.bracket-right {
-  border-right: 2px solid var(--text);
+.coordinate-input-frame.dimension-one .coordinate-parenthesis {
+  font-size: 64px;
 }
 
 .impossible-button {
@@ -676,7 +701,7 @@ p {
   }
 
   .coordinate-input-frame {
-    grid-template-columns: 10px minmax(0, 1fr) 10px;
+    grid-template-columns: 15px minmax(0, 1fr) 15px;
   }
 
   .result-actions {

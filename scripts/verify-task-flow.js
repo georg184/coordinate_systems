@@ -77,6 +77,7 @@ function generatedTask() {
 const controls = {
   beginRoundButton: createControl(),
   checkButton: createControl(),
+  coordinateSymbol: createControl(),
   coordinateInputFrame: createControl('dimension-two'),
   feedback: createControl('hidden'),
   impossibleButton: createControl(),
