@@ -81,7 +81,7 @@ The grid, vector, endpoints, arrowheads, and red coordinate axes are renderer-na
 
 ## Cache And Version Safety
 
-Current application version: `20260817.1`.
+Current application version: `20260817.2`.
 
 The version must remain identical in:
 

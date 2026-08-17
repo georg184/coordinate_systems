@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.1';
+const APP_VERSION = '20260817.2';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',

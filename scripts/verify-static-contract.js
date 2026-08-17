@@ -51,6 +51,12 @@ assert.match(appSource, /repère à une dimension/);
 assert.match(indexSource, /id="xCoordinateInput"/);
 assert.match(indexSource, /id="yCoordinateInput"/);
 assert.match(indexSource, /id="impossibleButton"/);
+const fallbackHint = indexSource.match(/<p id="inputHint"[^>]*>([^<]+)<\/p>/);
+assert.ok(fallbackHint, 'Missing static German input hint.');
+assert.ok(
+  appSource.includes(`inputHint: '${fallbackHint[1]}'`),
+  'Static German input hint and translation dictionary have drifted.'
+);
 
 for (const script of [
   'verify-javascript-syntax.js',
