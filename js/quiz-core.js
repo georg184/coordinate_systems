@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260817.8';
+  const VERSION = '20260817.9';
   const CONFIG = Object.freeze({
     oneDimensionalProbability: 0.5,
     oneDimensionalCardinalProbability: 0.7,
@@ -23,6 +23,7 @@
     vectorMaxRow: 11
   });
 
+  // Coordinate-axis symbols stay reserved for component indices.
   const VECTOR_NAMES = Object.freeze([
     Object.freeze({ text: 'a', latex: 'a' }),
     Object.freeze({ text: 'b', latex: 'b' }),

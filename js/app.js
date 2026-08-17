@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.8';
+const APP_VERSION = '20260817.9';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -681,6 +681,8 @@ function updateFeedbackText() {
 
 function setDimensionUi(task) {
   const oneDimensional = task.dimension === 1;
+  controls.xCoordinateInput.placeholder = `${task.vector.name.text}_x`;
+  controls.yCoordinateInput.placeholder = `${task.vector.name.text}_y`;
   controls.coordinateInputFrame.classList.toggle('dimension-one', oneDimensional);
   controls.coordinateInputFrame.classList.toggle('dimension-two', !oneDimensional);
   controls.yCoordinateInputLabel.classList.toggle('hidden', oneDimensional);

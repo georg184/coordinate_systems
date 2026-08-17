@@ -3,6 +3,14 @@
 const assert = require('node:assert/strict');
 const quizCore = require('../js/quiz-core.js');
 
+const RESERVED_VECTOR_NAMES = new Set(['x', 'y', 'z']);
+for (const name of quizCore.VECTOR_NAMES) {
+  assert.ok(
+    !RESERVED_VECTOR_NAMES.has(name.text),
+    `Coordinate-axis symbol ${name.text} must not be used as a vector name.`
+  );
+}
+
 function seededRandom(seed) {
   let state = seed >>> 0;
   return function() {
@@ -28,6 +36,7 @@ function verifyTask(task) {
   assert.ok(Number.isInteger(task.vector.dx));
   assert.ok(Number.isInteger(task.vector.dy));
   assert.notEqual(quizCore.squaredLength(task.vector), 0);
+  assert.ok(!RESERVED_VECTOR_NAMES.has(task.vector.name.text));
   assert.ok(
     quizCore.VECTOR_COLORS.includes(task.vector.color),
     `Unknown vector color ${task.vector.color}.`

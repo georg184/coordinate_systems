@@ -51,6 +51,7 @@ function createControl(...classes) {
     textContent: '',
     title: '',
     value: '',
+    placeholder: '',
     focus: function() { this.focusCount += 1; },
     setAttribute: function(name, value) { this.attributes[name] = String(value); }
   };
@@ -59,13 +60,14 @@ function createControl(...classes) {
 let generatedTaskCount = 0;
 function generatedTask() {
   generatedTaskCount += 1;
+  const vectorName = generatedTaskCount % 2 === 1 ? 'a' : 'v';
   return {
     id: generatedTaskCount,
     dimension: 1,
     systemKind: 'cardinal',
     isTilted: false,
     showMagnitude: false,
-    vector: { name: { latex: 'a' }, color: '#145ca8' },
+    vector: { name: { text: vectorName, latex: vectorName }, color: '#145ca8' },
     magnitude: { latex: '1' },
     answer: {
       possible: true,
@@ -244,6 +246,8 @@ assert.equal(controls.questionArea.classList.contains('hidden'), true);
 assert.equal(controls.roundStartPanel.classList.contains('hidden'), false);
 assert.equal(controls.nextButton.disabled, true);
 assert.equal(diagramRenderCount, 1);
+assert.equal(controls.xCoordinateInput.placeholder, 'a_x');
+assert.equal(controls.yCoordinateInput.placeholder, 'a_y');
 
 flow.beginRound();
 state = flow.state();
@@ -270,6 +274,8 @@ assert.equal(flow.state().answeredQuestions, 1, 'Solved question was scored twic
 flow.goToNextTask();
 state = flow.state();
 assert.equal(state.taskNumber, 2);
+assert.equal(controls.xCoordinateInput.placeholder, 'v_x');
+assert.equal(controls.yCoordinateInput.placeholder, 'v_y');
 assert.equal(state.answeredQuestions, 1);
 assert.equal(state.currentTaskScored, false);
 
