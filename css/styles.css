@@ -441,6 +441,7 @@ p {
 }
 
 .coordinate-input-label {
+  position: relative;
   display: block;
 }
 
@@ -453,6 +454,29 @@ p {
   color: var(--text);
   background: #fff;
   text-align: center;
+}
+
+.coordinate-input-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  background: transparent;
+  pointer-events: none;
+}
+
+.coordinate-input-placeholder mjx-container {
+  margin: 0 !important;
+  background: transparent !important;
+  font-size: inherit !important;
+}
+
+.coordinate-input-label input:not(:placeholder-shown) + .coordinate-input-placeholder {
+  visibility: hidden;
 }
 
 .coordinate-parenthesis {

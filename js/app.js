@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.9';
+const APP_VERSION = '20260817.10';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -254,6 +254,8 @@ const controls = {
   coordinateInputFrame: document.getElementById('coordinateInputFrame'),
   xCoordinateInput: document.getElementById('xCoordinateInput'),
   yCoordinateInput: document.getElementById('yCoordinateInput'),
+  xCoordinatePlaceholder: document.getElementById('xCoordinatePlaceholder'),
+  yCoordinatePlaceholder: document.getElementById('yCoordinatePlaceholder'),
   yCoordinateInputLabel: document.getElementById('yCoordinateInputLabel'),
   xCoordinateLabel: document.getElementById('xCoordinateLabel'),
   yCoordinateLabel: document.getElementById('yCoordinateLabel'),
@@ -681,8 +683,14 @@ function updateFeedbackText() {
 
 function setDimensionUi(task) {
   const oneDimensional = task.dimension === 1;
-  controls.xCoordinateInput.placeholder = `${task.vector.name.text}_x`;
-  controls.yCoordinateInput.placeholder = `${task.vector.name.text}_y`;
+  renderMath(
+    controls.xCoordinatePlaceholder,
+    `\\(${task.vector.name.latex}_{x}\\)`
+  );
+  renderMath(
+    controls.yCoordinatePlaceholder,
+    `\\(${task.vector.name.latex}_{y}\\)`
+  );
   controls.coordinateInputFrame.classList.toggle('dimension-one', oneDimensional);
   controls.coordinateInputFrame.classList.toggle('dimension-two', !oneDimensional);
   controls.yCoordinateInputLabel.classList.toggle('hidden', oneDimensional);

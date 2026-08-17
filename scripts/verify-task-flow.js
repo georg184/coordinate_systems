@@ -51,7 +51,6 @@ function createControl(...classes) {
     textContent: '',
     title: '',
     value: '',
-    placeholder: '',
     focus: function() { this.focusCount += 1; },
     setAttribute: function(name, value) { this.attributes[name] = String(value); }
   };
@@ -97,7 +96,9 @@ const controls = {
   taskQuestion: createControl(),
   timeCounter: createControl(),
   xCoordinateInput: createControl(),
+  xCoordinatePlaceholder: createControl(),
   yCoordinateInput: createControl(),
+  yCoordinatePlaceholder: createControl(),
   yCoordinateInputLabel: createControl()
 };
 
@@ -246,8 +247,8 @@ assert.equal(controls.questionArea.classList.contains('hidden'), true);
 assert.equal(controls.roundStartPanel.classList.contains('hidden'), false);
 assert.equal(controls.nextButton.disabled, true);
 assert.equal(diagramRenderCount, 1);
-assert.equal(controls.xCoordinateInput.placeholder, 'a_x');
-assert.equal(controls.yCoordinateInput.placeholder, 'a_y');
+assert.equal(controls.xCoordinatePlaceholder.innerHTML, '\\(a_{x}\\)');
+assert.equal(controls.yCoordinatePlaceholder.innerHTML, '\\(a_{y}\\)');
 
 flow.beginRound();
 state = flow.state();
@@ -274,8 +275,8 @@ assert.equal(flow.state().answeredQuestions, 1, 'Solved question was scored twic
 flow.goToNextTask();
 state = flow.state();
 assert.equal(state.taskNumber, 2);
-assert.equal(controls.xCoordinateInput.placeholder, 'v_x');
-assert.equal(controls.yCoordinateInput.placeholder, 'v_y');
+assert.equal(controls.xCoordinatePlaceholder.innerHTML, '\\(v_{x}\\)');
+assert.equal(controls.yCoordinatePlaceholder.innerHTML, '\\(v_{y}\\)');
 assert.equal(state.answeredQuestions, 1);
 assert.equal(state.currentTaskScored, false);
 

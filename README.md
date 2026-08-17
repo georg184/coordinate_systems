@@ -48,7 +48,7 @@ The app opens directly on the quiz and follows the established `trigonometric_fu
 - result screen with points and elapsed time
 - a full page reload starts fresh
 
-One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields. The inputs are enclosed in round parentheses and preceded by the same randomly selected vector symbol used in the drawing. Their placeholders use the matching component notation, for example `v_x` and `v_y` for vector `v`. The parenthesis glyphs use a calibrated vertical offset so their visible shapes align with the input fields.
+One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields. The inputs are enclosed in round parentheses and preceded by the same randomly selected vector symbol used in the drawing. Transparent MathJax overlays inside the fields render the matching component notation, for example \(v_x\) and \(v_y\) for vector \(v\), and disappear as soon as a value is entered. The parenthesis glyphs use a calibrated vertical offset so their visible shapes align with the input fields.
 
 Vector names are selected from `a`, `b`, `c`, `u`, `v`, and `w`. The coordinate-axis symbols `x`, `y`, and `z` are reserved and never used as vector names.
 
@@ -84,7 +84,7 @@ The grid, vector shaft, arrowhead, and red coordinate axes are renderer-native i
 
 ## Cache And Version Safety
 
-Current application version: `20260817.9`.
+Current application version: `20260817.10`.
 
 The version must remain identical in:
 
