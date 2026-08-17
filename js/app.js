@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.3';
+const APP_VERSION = '20260817.4';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -48,6 +48,7 @@ const TIMER_UPDATE_INTERVAL_MS = 250;
 const SUPPORTED_LANGUAGES = Object.freeze(['de', 'en', 'fr']);
 const LANGUAGE_STORAGE_KEY = 'coordinate-systems-language';
 const SVG_NS = 'http://www.w3.org/2000/svg';
+const AXIS_COLOR = '#cf2f3f';
 const DIAGRAM = Object.freeze({
   width: 720,
   height: 480,
@@ -65,19 +66,6 @@ const TEXT = {
     pageTitle: 'Vektoren koordinatisieren',
     heading: 'Vektoren koordinatisieren',
     languageSelectorAria: 'Sprachauswahl',
-    intro: {
-      eyebrow: 'Koordinatendarstellungen',
-      title: 'Lies einen Vektor im roten Koordinatensystem ab',
-      description: 'Das Gitter zeigt den Vektor. Die kurzen roten Achsen legen fest, in welchen Richtungen seine Koordinaten gemessen werden.',
-      factsAria: 'Quizhinweise',
-      factOneTitle: '1D oder 2D',
-      factOneText: 'Das Koordinatensystem wird für jede Aufgabe neu ausgelost.',
-      factTwoTitle: 'Richtung beachten',
-      factTwoText: 'Auch nach links oder unten gerichtete Achsen sind möglich.',
-      factThreeTitle: 'Manchmal unmöglich',
-      factThreeText: 'In 1D muss der Vektor parallel zur einzigen Achse sein.',
-      start: 'Quiz öffnen'
-    },
     diagram: {
       heading: 'Vektor und Koordinatensystem',
       legendAria: 'Legende',
@@ -90,8 +78,6 @@ const TEXT = {
     },
     quiz: {
       taskPanelAria: 'Aufgabe',
-      back: 'Zur Startseite',
-      backTitle: 'Zur Startseite wechseln. Der aktuelle Stand bleibt erhalten.',
       next: 'Nächste Aufgabe',
       nextTitle: 'Unbeantwortete Aufgabe überspringen und mit 0 Punkten werten.',
       result: 'Ergebnis anzeigen',
@@ -104,9 +90,6 @@ const TEXT = {
       question: function(vectorLatex, dimension) {
         const adjective = dimension === 1 ? 'eindimensionalen' : 'zweidimensionalen';
         return `Bestimme die Koordinatendarstellung von \\(\\vec{${vectorLatex}}\\) bezüglich des roten ${adjective} Koordinatensystems.`;
-      },
-      magnitude: function(vectorLatex, magnitudeLatex) {
-        return `Gegeben: \\(\\lvert\\vec{${vectorLatex}}\\rvert=${magnitudeLatex}\\)`;
       },
       answerLegend: 'Koordinatendarstellung',
       xCoordinateAria: 'x-Koordinate',
@@ -131,27 +114,13 @@ const TEXT = {
       score: function(correct, total) { return `${correct}/${total} Punkte`; },
       detail: function(correct, total) { return `Du hast ${correct} von ${total} Aufgaben richtig beantwortet.`; },
       time: function(time) { return `Zeit: ${time}`; },
-      newRound: 'Neues Quiz starten',
-      home: 'Zur Startseite'
+      newRound: 'Neues Quiz starten'
     }
   },
   en: {
     pageTitle: 'Vector Coordinates',
     heading: 'Expressing Vectors in Coordinate Systems',
     languageSelectorAria: 'Language selector',
-    intro: {
-      eyebrow: 'Coordinate representations',
-      title: 'Read a vector in the red coordinate system',
-      description: 'The grid shows the vector. The short red axes determine the directions in which its coordinates are measured.',
-      factsAria: 'Quiz information',
-      factOneTitle: '1D or 2D',
-      factOneText: 'A new coordinate system is selected for every question.',
-      factTwoTitle: 'Watch the direction',
-      factTwoText: 'Axes may also point to the left or downwards.',
-      factThreeTitle: 'Sometimes impossible',
-      factThreeText: 'In 1D, the vector must be parallel to the only axis.',
-      start: 'Open Quiz'
-    },
     diagram: {
       heading: 'Vector and Coordinate System',
       legendAria: 'Legend',
@@ -163,8 +132,6 @@ const TEXT = {
     },
     quiz: {
       taskPanelAria: 'Question',
-      back: 'Home',
-      backTitle: 'Go to the home screen. The current progress is kept.',
       next: 'Next Question',
       nextTitle: 'Skip an unanswered question and score 0 points.',
       result: 'Show Result',
@@ -176,9 +143,6 @@ const TEXT = {
       begin: 'Start',
       question: function(vectorLatex, dimension) {
         return `Give the coordinate representation of \\(\\vec{${vectorLatex}}\\) with respect to the red ${dimension}D coordinate system.`;
-      },
-      magnitude: function(vectorLatex, magnitudeLatex) {
-        return `Given: \\(\\lvert\\vec{${vectorLatex}}\\rvert=${magnitudeLatex}\\)`;
       },
       answerLegend: 'Coordinate representation',
       xCoordinateAria: 'x-coordinate',
@@ -203,27 +167,13 @@ const TEXT = {
       score: function(correct, total) { return `${correct}/${total} points`; },
       detail: function(correct, total) { return `You answered ${correct} of ${total} questions correctly.`; },
       time: function(time) { return `Time: ${time}`; },
-      newRound: 'Start New Quiz',
-      home: 'Home'
+      newRound: 'Start New Quiz'
     }
   },
   fr: {
     pageTitle: 'Coordonnées de vecteurs',
     heading: 'Coordonner des vecteurs',
     languageSelectorAria: 'Sélecteur de langue',
-    intro: {
-      eyebrow: 'Représentations en coordonnées',
-      title: 'Lis un vecteur dans le repère rouge',
-      description: 'Le quadrillage montre le vecteur. Les petits axes rouges déterminent les directions dans lesquelles ses coordonnées sont mesurées.',
-      factsAria: 'Informations sur le quiz',
-      factOneTitle: '1D ou 2D',
-      factOneText: 'Un nouveau repère est tiré au sort pour chaque question.',
-      factTwoTitle: 'Attention au sens',
-      factTwoText: 'Les axes peuvent aussi être orientés vers la gauche ou vers le bas.',
-      factThreeTitle: 'Parfois impossible',
-      factThreeText: 'En 1D, le vecteur doit être parallèle à l’unique axe.',
-      start: 'Ouvrir le quiz'
-    },
     diagram: {
       heading: 'Vecteur et repère',
       legendAria: 'Légende',
@@ -235,8 +185,6 @@ const TEXT = {
     },
     quiz: {
       taskPanelAria: 'Question',
-      back: 'Accueil',
-      backTitle: 'Retourner à l’accueil. La progression actuelle est conservée.',
       next: 'Question suivante',
       nextTitle: 'Passer une question sans réponse et compter 0 point.',
       result: 'Afficher le résultat',
@@ -248,9 +196,6 @@ const TEXT = {
       begin: 'Démarrer',
       question: function(vectorLatex, dimension) {
         return `Donne la représentation en coordonnées de \\(\\vec{${vectorLatex}}\\) dans le repère rouge à ${dimension} dimension${dimension === 1 ? '' : 's'}.`;
-      },
-      magnitude: function(vectorLatex, magnitudeLatex) {
-        return `Donnée : \\(\\lvert\\vec{${vectorLatex}}\\rvert=${magnitudeLatex}\\)`;
       },
       answerLegend: 'Représentation en coordonnées',
       xCoordinateAria: 'Coordonnée x',
@@ -275,8 +220,7 @@ const TEXT = {
       score: function(correct, total) { return `${correct}/${total} points`; },
       detail: function(correct, total) { return `Tu as répondu correctement à ${correct} question${correct === 1 ? '' : 's'} sur ${total}.`; },
       time: function(time) { return `Temps : ${time}`; },
-      newRound: 'Commencer un nouveau quiz',
-      home: 'Accueil'
+      newRound: 'Commencer un nouveau quiz'
     }
   }
 };
@@ -287,21 +231,9 @@ const controls = {
   langEnButton: document.getElementById('langEnButton'),
   langFrButton: document.getElementById('langFrButton'),
   mainHeading: document.getElementById('mainHeading'),
-  introScreen: document.getElementById('introScreen'),
-  introEyebrow: document.getElementById('introEyebrow'),
-  introTitle: document.getElementById('introTitle'),
-  introDescription: document.getElementById('introDescription'),
-  introFacts: document.getElementById('introFacts'),
-  introFactOneTitle: document.getElementById('introFactOneTitle'),
-  introFactOneText: document.getElementById('introFactOneText'),
-  introFactTwoTitle: document.getElementById('introFactTwoTitle'),
-  introFactTwoText: document.getElementById('introFactTwoText'),
-  introFactThreeTitle: document.getElementById('introFactThreeTitle'),
-  introFactThreeText: document.getElementById('introFactThreeText'),
-  startQuizButton: document.getElementById('startQuizButton'),
   quizScreen: document.getElementById('quizScreen'),
-  backButton: document.getElementById('backButton'),
   nextButton: document.getElementById('nextButton'),
+  diagramPanel: document.getElementById('diagramPanel'),
   diagramHeading: document.getElementById('diagramHeading'),
   diagramLegend: document.querySelector('.diagram-legend'),
   vectorLegend: document.getElementById('vectorLegend'),
@@ -316,7 +248,6 @@ const controls = {
   beginRoundButton: document.getElementById('beginRoundButton'),
   questionArea: document.getElementById('questionArea'),
   taskQuestion: document.getElementById('taskQuestion'),
-  magnitudeInfo: document.getElementById('magnitudeInfo'),
   answerForm: document.getElementById('answerForm'),
   answerLegend: document.getElementById('answerLegend'),
   coordinateSymbol: document.getElementById('coordinateSymbol'),
@@ -337,12 +268,10 @@ const controls = {
   resultScore: document.getElementById('resultScore'),
   resultDetail: document.getElementById('resultDetail'),
   resultTime: document.getElementById('resultTime'),
-  newRoundButton: document.getElementById('newRoundButton'),
-  resultHomeButton: document.getElementById('resultHomeButton')
+  newRoundButton: document.getElementById('newRoundButton')
 };
 
 const screens = {
-  intro: controls.introScreen,
   quiz: controls.quizScreen,
   result: controls.resultScreen
 };
@@ -530,7 +459,7 @@ function pointBeyondArrow(origin, direction, extraDistance) {
   };
 }
 
-function vectorLabelPoints(start, end, showMagnitude) {
+function vectorLabelPoint(start, end) {
   const line = { x: end.x - start.x, y: end.y - start.y };
   const length = Math.hypot(line.x, line.y);
   let normal = { x: -line.y / length, y: line.x / length };
@@ -539,14 +468,15 @@ function vectorLabelPoints(start, end, showMagnitude) {
   }
   const midpoint = { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 };
   return {
-    name: {
-      x: midpoint.x + normal.x * 25,
-      y: midpoint.y + normal.y * 25
-    },
-    magnitude: showMagnitude ? {
-      x: midpoint.x - normal.x * 27,
-      y: midpoint.y - normal.y * 27
-    } : null
+    x: midpoint.x + normal.x * 25,
+    y: midpoint.y + normal.y * 25
+  };
+}
+
+function magnitudeLabelPoint() {
+  return {
+    x: DIAGRAM.gridLeft + DIAGRAM.columnCount * DIAGRAM.gridCell - 10,
+    y: DIAGRAM.gridTop + DIAGRAM.rowCount * DIAGRAM.gridCell - 8
   };
 }
 
@@ -591,7 +521,7 @@ function appendCoordinateAxes(svg, task, labelContainer) {
       y1: origin.y,
       x2: end.x,
       y2: end.y,
-      stroke: '#cf2f3f',
+      stroke: AXIS_COLOR,
       'stroke-width': 3.2,
       'stroke-linecap': 'round',
       'marker-end': 'url(#axis-arrow)',
@@ -619,7 +549,7 @@ function appendVector(svg, task, labelContainer) {
     cx: start.x,
     cy: start.y,
     r: 5,
-    fill: '#145ca8',
+    fill: task.vector.color,
     stroke: '#ffffff',
     'stroke-width': 1.8,
     'vector-effect': 'non-scaling-stroke'
@@ -629,24 +559,23 @@ function appendVector(svg, task, labelContainer) {
     y1: start.y,
     x2: end.x,
     y2: end.y,
-    stroke: '#145ca8',
+    stroke: task.vector.color,
     'stroke-width': 4,
     'stroke-linecap': 'round',
     'marker-end': 'url(#vector-arrow)',
     'vector-effect': 'non-scaling-stroke'
   }));
 
-  const labelPoints = vectorLabelPoints(start, end, task.showMagnitude);
   addDiagramLabel(
     labelContainer,
-    labelPoints.name,
+    vectorLabelPoint(start, end),
     'diagram-label-vector',
     `\\(\\vec{${task.vector.name.latex}}\\)`
   );
-  if (labelPoints.magnitude) {
+  if (task.showMagnitude) {
     addDiagramLabel(
       labelContainer,
-      labelPoints.magnitude,
+      magnitudeLabelPoint(),
       'diagram-label-magnitude',
       `\\(\\lvert\\vec{${task.vector.name.latex}}\\rvert=${task.magnitude.latex}\\)`
     );
@@ -659,6 +588,7 @@ function renderDiagram(task) {
     return;
   }
   const texts = getTextBundle();
+  controls.diagramPanel.style.setProperty('--vector-color', task.vector.color);
   controls.coordinateDiagram.setAttribute('aria-label', texts.diagram.aria(task));
   replaceMathContent(controls.coordinateDiagram, function() {
     controls.coordinateDiagram.innerHTML = '';
@@ -670,8 +600,8 @@ function renderDiagram(task) {
       preserveAspectRatio: 'xMidYMid meet'
     });
     const definitions = createSvgElement('defs');
-    definitions.appendChild(markerDefinition('vector-arrow', '#145ca8', 13));
-    definitions.appendChild(markerDefinition('axis-arrow', '#cf2f3f', 10));
+    definitions.appendChild(markerDefinition('vector-arrow', task.vector.color, 13));
+    definitions.appendChild(markerDefinition('axis-arrow', AXIS_COLOR, 10));
     svg.appendChild(definitions);
     appendGrid(svg);
     appendCoordinateAxes(svg, task, controls.coordinateDiagram);
@@ -780,10 +710,6 @@ function getTaskQuestion(task) {
   return getTextBundle().quiz.question(task.vector.name.latex, task.dimension);
 }
 
-function getMagnitudeInfo(task) {
-  return getTextBundle().quiz.magnitude(task.vector.name.latex, task.magnitude.latex);
-}
-
 function getSolutionContent(task) {
   const texts = getTextBundle().quiz;
   if (!task.answer.possible) {
@@ -812,7 +738,6 @@ function refreshCurrentTaskLanguage() {
   renderDiagram(currentTask);
   if (!roundStarted) {
     clearMathContent(controls.taskQuestion);
-    clearMathContent(controls.magnitudeInfo);
     clearMathContent(controls.coordinateSymbol);
     return;
   }
@@ -821,12 +746,6 @@ function refreshCurrentTaskLanguage() {
     controls.coordinateSymbol,
     `\\(\\vec{${currentTask.vector.name.latex}}=\\)`
   );
-  controls.magnitudeInfo.classList.toggle('hidden', !currentTask.showMagnitude);
-  if (currentTask.showMagnitude) {
-    renderMath(controls.magnitudeInfo, getMagnitudeInfo(currentTask));
-  } else {
-    clearMathContent(controls.magnitudeInfo);
-  }
   if (!controls.solution.classList.contains('hidden')) {
     renderMath(controls.solution, getSolutionContent(currentTask));
   }
@@ -838,19 +757,6 @@ function applyLanguage() {
   document.title = texts.pageTitle;
   controls.languageSwitcher.setAttribute('aria-label', texts.languageSelectorAria);
   controls.mainHeading.textContent = texts.heading;
-  controls.introEyebrow.textContent = texts.intro.eyebrow;
-  controls.introTitle.textContent = texts.intro.title;
-  controls.introDescription.textContent = texts.intro.description;
-  controls.introFacts.setAttribute('aria-label', texts.intro.factsAria);
-  controls.introFactOneTitle.textContent = texts.intro.factOneTitle;
-  controls.introFactOneText.textContent = texts.intro.factOneText;
-  controls.introFactTwoTitle.textContent = texts.intro.factTwoTitle;
-  controls.introFactTwoText.textContent = texts.intro.factTwoText;
-  controls.introFactThreeTitle.textContent = texts.intro.factThreeTitle;
-  controls.introFactThreeText.textContent = texts.intro.factThreeText;
-  controls.startQuizButton.textContent = texts.intro.start;
-  controls.backButton.textContent = texts.quiz.back;
-  controls.backButton.title = texts.quiz.backTitle;
   controls.diagramHeading.textContent = texts.diagram.heading;
   controls.diagramLegend.setAttribute('aria-label', texts.diagram.legendAria);
   controls.vectorLegend.textContent = texts.diagram.vectorLegend;
@@ -869,7 +775,6 @@ function applyLanguage() {
   controls.resultEyebrow.textContent = texts.result.eyebrow;
   controls.resultTitle.textContent = texts.result.title;
   controls.newRoundButton.textContent = texts.result.newRound;
-  controls.resultHomeButton.textContent = texts.result.home;
   updateLanguageButtons();
   updateTaskCounter();
   updateScoreCounter();
@@ -945,7 +850,6 @@ function hideQuestionUntilRoundStart() {
   controls.questionArea.classList.add('hidden');
   controls.nextButton.disabled = true;
   clearMathContentNow(controls.taskQuestion);
-  clearMathContentNow(controls.magnitudeInfo);
   clearMathContentNow(controls.coordinateSymbol);
   window.setTimeout(function() {
     controls.beginRoundButton.focus();
@@ -961,12 +865,6 @@ function showCurrentQuestion() {
     controls.coordinateSymbol,
     `\\(\\vec{${currentTask.vector.name.latex}}=\\)`
   );
-  controls.magnitudeInfo.classList.toggle('hidden', !currentTask.showMagnitude);
-  if (currentTask.showMagnitude) {
-    renderMath(controls.magnitudeInfo, getMagnitudeInfo(currentTask));
-  } else {
-    clearMathContent(controls.magnitudeInfo);
-  }
   controls.nextButton.disabled = false;
   window.setTimeout(function() {
     controls.xCoordinateInput.focus();
@@ -1055,28 +953,10 @@ function startNewRound() {
   buildNewTask();
 }
 
-function openQuiz() {
-  showScreen('quiz');
-  if (currentTask && !roundFinished) {
-    renderDiagram(currentTask);
-    updateScoreCounter();
-    updateTimeCounter();
-    if (roundStarted) {
-      showCurrentQuestion();
-    } else {
-      hideQuestionUntilRoundStart();
-    }
-    return;
-  }
-  startNewRound();
-}
-
 controls.langDeButton.addEventListener('click', function() { setLanguage('de'); });
 controls.langEnButton.addEventListener('click', function() { setLanguage('en'); });
 controls.langFrButton.addEventListener('click', function() { setLanguage('fr'); });
-controls.startQuizButton.addEventListener('click', openQuiz);
 controls.beginRoundButton.addEventListener('click', beginRound);
-controls.backButton.addEventListener('click', function() { showScreen('intro'); });
 controls.nextButton.addEventListener('click', goToNextTask);
 controls.answerForm.addEventListener('submit', submitAnswer);
 controls.impossibleButton.addEventListener('click', function() {
@@ -1088,7 +968,6 @@ controls.impossibleButton.addEventListener('click', function() {
   }
 });
 controls.newRoundButton.addEventListener('click', startNewRound);
-controls.resultHomeButton.addEventListener('click', function() { showScreen('intro'); });
 
 window.GGCoordinateSystemsApp = Object.freeze({
   version: APP_VERSION,
@@ -1113,4 +992,4 @@ if (storedLanguage) {
 }
 persistLanguage();
 applyLanguage();
-showScreen('intro');
+startNewRound();

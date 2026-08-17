@@ -41,6 +41,10 @@ assert.match(mathJaxSource, /matchFontHeight: false/);
 assert.match(cssSource, /\.diagram-label mjx-container[\s\S]*background: transparent !important/);
 assert.doesNotMatch(cssSource, /\.diagram-label[^{]*\{[^}]*text-shadow/s);
 assert.doesNotMatch(indexSource + appSource, /serviceWorker\.register/);
+assert.doesNotMatch(indexSource, /id="(?:introScreen|startQuizButton|backButton|resultHomeButton|magnitudeInfo)"/);
+assert.match(indexSource, /id="quizScreen" class="screen quiz-screen"/);
+assert.doesNotMatch(appSource, /showScreen\('intro'\)|function openQuiz\(/);
+assert.match(appSource, /applyLanguage\(\);\s*startNewRound\(\);/);
 
 for (const language of ['de', 'en', 'fr']) {
   assert.match(appSource, new RegExp(`\\n  ${language}: \\{`), `Missing ${language} translations.`);
@@ -59,6 +63,15 @@ assert.match(cssSource, /\.coordinate-parenthesis\s*\{/);
 assert.match(appSource, /controls\.coordinateSymbol/);
 assert.match(appSource, /const formula = `\\\\vec\{/);
 assert.doesNotMatch(appSource, /\\\\left\[/);
+assert.match(coreSource, /const VECTOR_COLORS = Object\.freeze\(\[/);
+assert.match(coreSource, /color: vectorColor/);
+assert.match(appSource, /const AXIS_COLOR = '#cf2f3f'/);
+assert.match(appSource, /markerDefinition\('vector-arrow', task\.vector\.color/);
+assert.match(appSource, /markerDefinition\('axis-arrow', AXIS_COLOR/);
+assert.match(appSource, /function magnitudeLabelPoint\(\)/);
+assert.match(appSource, /magnitudeLabelPoint\(\),\s*'diagram-label-magnitude'/);
+assert.doesNotMatch(appSource, /labelPoints\.magnitude/);
+assert.match(cssSource, /\.diagram-label-magnitude\s*\{[^}]*translate\(-100%, -100%\)/s);
 const fallbackHint = indexSource.match(/<p id="inputHint"[^>]*>([^<]+)<\/p>/);
 assert.ok(fallbackHint, 'Missing static German input hint.');
 assert.ok(

@@ -13,13 +13,13 @@ The public version is intended to be available through GitHub Pages:
 Every question shows:
 
 - a square unit grid
-- a randomly named vector whose initial and terminal points lie on grid intersections
+- a randomly named and randomly colored vector whose initial and terminal points lie on grid intersections
 - a short red one- or two-dimensional coordinate system near the left edge of the grid
 - oriented red axes labelled with MathJax-rendered `x` and, in two dimensions, `y`
 
-The position of the red axes is irrelevant for vector coordinates. Their directions define the orthonormal basis in which the blue vector must be expressed. The red origin is deliberately not labelled.
+The position of the red axes is irrelevant for vector coordinates. Their directions define the orthonormal basis in which the colored vector must be expressed. The coordinate system is always red, while each task selects the vector color from a non-red palette. The red origin is deliberately not labelled.
 
-For tilted coordinate systems, the exact vector magnitude is displayed next to the vector and in the question panel. Square roots can be entered as `sqrt(5)`, `2sqrt(5)`, `√5`, or simple LaTeX such as `\sqrt{5}`. The local parser supports only numbers, decimal separators, arithmetic operators, parentheses, and square roots; it never evaluates JavaScript.
+For tilted coordinate systems, the exact vector magnitude is displayed in a reserved area at the bottom right of the grid rather than beside the vector. Square roots can be entered as `sqrt(5)`, `2sqrt(5)`, `√5`, or simple LaTeX such as `\sqrt{5}`. The local parser supports only numbers, decimal separators, arithmetic operators, parentheses, and square roots; it never evaluates JavaScript.
 
 ## Generation Contract
 
@@ -38,7 +38,7 @@ The axis arrows use one or two grid steps and remain below two CSS centimetres a
 
 ## Quiz Flow
 
-The app follows the established `trigonometric_functions` round model:
+The app opens directly on the quiz and follows the established `trigonometric_functions` round model:
 
 - fixed rounds of 10 questions
 - first diagram visible before the round begins
@@ -46,7 +46,6 @@ The app follows the established `trigonometric_functions` round model:
 - unanswered questions can be skipped and score 0 points
 - each question is scored at most once
 - result screen with points and elapsed time
-- returning to the home screen preserves the current in-memory round
 - a full page reload starts fresh
 
 One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields. The inputs are enclosed in round parentheses and preceded by the same randomly selected vector symbol used in the drawing.
@@ -71,7 +70,7 @@ The workspace angle-layout helper is intentionally not vendored: this app draws 
 
 The app supports German (`de`), English (`en`), and French (`fr`). Unless a request explicitly limits a change to one language, every user-visible text change must update all three variants plus the German static HTML fallback in the same commit. This includes titles, descriptions, buttons, placeholders, ARIA labels, feedback, solutions, result text, and diagram descriptions.
 
-The selected language is stored in `sessionStorage` and remains consistent across the intro, quiz, result screen, and in-memory navigation.
+The selected language is stored in `sessionStorage` and remains consistent across the quiz and result screen.
 
 ## MathJax And Drawing Rules
 
@@ -81,7 +80,7 @@ The grid, vector, endpoints, arrowheads, and red coordinate axes are renderer-na
 
 ## Cache And Version Safety
 
-Current application version: `20260817.3`.
+Current application version: `20260817.4`.
 
 The version must remain identical in:
 
@@ -107,12 +106,13 @@ node scripts/verify-static-contract.js
 
 Browser verification should cover:
 
-- German, English, and French intro, question, feedback, solution, and result text
-- the pre-start state, timer, answer, skip, next-question, home/resume, and ten-question result flow
+- German, English, and French question, feedback, solution, and result text
+- direct quiz entry, the pre-start state, timer, answer, skip, next-question, and ten-question result flow
 - one-dimensional cardinal and tilted systems in both orientations
 - non-representable one-dimensional cases
 - standard and rotated two-dimensional systems
-- exact magnitude and square-root input
+- randomly selected non-red vector colors with consistently red coordinate axes
+- exact magnitude at the bottom right of the grid and square-root input
 - visible vector endpoints on grid intersections
 - red axes remaining short, oriented, orthogonal in 2D, and correctly labelled
 - transparent MathJax overlays without stale or duplicate labels after rapid task/language changes

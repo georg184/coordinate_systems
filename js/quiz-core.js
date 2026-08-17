@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260817.3';
+  const VERSION = '20260817.4';
   const CONFIG = Object.freeze({
     oneDimensionalProbability: 0.5,
     oneDimensionalCardinalProbability: 0.7,
@@ -20,7 +20,7 @@
     vectorMinColumn: 9,
     vectorMaxColumn: 21,
     vectorMinRow: 1,
-    vectorMaxRow: 13
+    vectorMaxRow: 11
   });
 
   const VECTOR_NAMES = Object.freeze([
@@ -30,6 +30,15 @@
     Object.freeze({ text: 'u', latex: 'u' }),
     Object.freeze({ text: 'v', latex: 'v' }),
     Object.freeze({ text: 'w', latex: 'w' })
+  ]);
+
+  const VECTOR_COLORS = Object.freeze([
+    '#145ca8',
+    '#0b7463',
+    '#6f42a5',
+    '#9a5d00',
+    '#006d8f',
+    '#5a6f18'
   ]);
 
   const CARDINAL_DIRECTIONS = Object.freeze([
@@ -323,12 +332,16 @@
         ? buildRotatedTwoDimensionalTask(random)
         : buildStandardTwoDimensionalTask(random);
     const vector = partial.displacement;
+    const vectorName = Object.assign({}, randomChoice(VECTOR_NAMES, random));
+    const vectorPoints = placeDisplacementOnGrid(vector, random);
+    const vectorColor = randomChoice(VECTOR_COLORS, random);
     const task = Object.assign({}, partial, {
       vector: {
-        name: Object.assign({}, randomChoice(VECTOR_NAMES, random)),
+        name: vectorName,
         dx: vector.dx,
         dy: vector.dy,
-        points: placeDisplacementOnGrid(vector, random)
+        points: vectorPoints,
+        color: vectorColor
       },
       magnitude: magnitudeExact(vector),
       showMagnitude: partial.isTilted
@@ -513,6 +526,7 @@
     VERSION,
     CONFIG,
     VECTOR_NAMES,
+    VECTOR_COLORS,
     CARDINAL_DIRECTIONS,
     DIAGONAL_DIRECTIONS,
     generateTask,

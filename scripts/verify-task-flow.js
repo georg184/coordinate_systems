@@ -65,7 +65,7 @@ function generatedTask() {
     systemKind: 'cardinal',
     isTilted: false,
     showMagnitude: false,
-    vector: { name: { latex: 'a' } },
+    vector: { name: { latex: 'a' }, color: '#145ca8' },
     magnitude: { latex: '1' },
     answer: {
       possible: true,
@@ -82,7 +82,6 @@ const controls = {
   feedback: createControl('hidden'),
   impossibleButton: createControl(),
   inputHint: createControl(),
-  magnitudeInfo: createControl('hidden'),
   newRoundButton: createControl(),
   nextButton: createControl(),
   questionArea: createControl('hidden'),
@@ -119,7 +118,6 @@ const textBundle = {
     scoreCounter: (correct, answered) => `${correct}/${answered}`,
     timeCounter: time => `Time ${time}`,
     question: () => 'Question',
-    magnitude: () => 'Magnitude',
     solutionLead: 'Solution',
     possibleExplanation1d: 'Parallel',
     possibleExplanationStandard: 'Standard',
@@ -182,7 +180,6 @@ const functionNames = [
   'setDimensionUi',
   'setImpossibleSelected',
   'getTaskQuestion',
-  'getMagnitudeInfo',
   'getSolutionContent',
   'scoreCurrentTask',
   'clearSolvedState',
@@ -194,8 +191,7 @@ const functionNames = [
   'showRoundResult',
   'goToNextTask',
   'beginRound',
-  'startNewRound',
-  'openQuiz'
+  'startNewRound'
 ];
 
 vm.runInContext(`
@@ -219,7 +215,6 @@ vm.runInContext(`
   this.flow = {
     beginRound,
     goToNextTask,
-    openQuiz,
     startNewRound,
     submitAnswer,
     state: function() {
@@ -249,12 +244,6 @@ assert.equal(controls.questionArea.classList.contains('hidden'), true);
 assert.equal(controls.roundStartPanel.classList.contains('hidden'), false);
 assert.equal(controls.nextButton.disabled, true);
 assert.equal(diagramRenderCount, 1);
-
-const firstTask = state.currentTask;
-flow.openQuiz();
-state = flow.state();
-assert.equal(state.currentTask, firstTask, 'Reopening the quiz discarded its in-memory state.');
-assert.equal(state.taskNumber, 1);
 
 flow.beginRound();
 state = flow.state();
@@ -315,4 +304,4 @@ assert.equal(state.correctAnswers, 0);
 assert.equal(state.roundFinished, false);
 assert.equal(state.roundStarted, false);
 
-console.log('Ten-question start, answer, skip, resume, timer, and result flow verified');
+console.log('Ten-question direct start, answer, skip, timer, and result flow verified');

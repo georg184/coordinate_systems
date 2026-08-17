@@ -28,6 +28,11 @@ function verifyTask(task) {
   assert.ok(Number.isInteger(task.vector.dx));
   assert.ok(Number.isInteger(task.vector.dy));
   assert.notEqual(quizCore.squaredLength(task.vector), 0);
+  assert.ok(
+    quizCore.VECTOR_COLORS.includes(task.vector.color),
+    `Unknown vector color ${task.vector.color}.`
+  );
+  assert.notEqual(task.vector.color.toLowerCase(), '#cf2f3f', 'Vector color must not be axis red.');
   assert.equal(task.showMagnitude, task.isTilted);
   assert.ok(task.magnitude.value > 0);
 
@@ -108,12 +113,14 @@ const counts = {
   cardinalDirections: new Map(['1,0', '-1,0', '0,1', '0,-1'].map(key => [key, 0])),
   standardXPositive: 0,
   standardYPositive: 0,
-  standardCount: 0
+  standardCount: 0,
+  vectorColors: new Map(quizCore.VECTOR_COLORS.map(color => [color, 0]))
 };
 
 for (let index = 0; index < sampleSize; index += 1) {
   const task = quizCore.generateTask(random);
   verifyTask(task);
+  counts.vectorColors.set(task.vector.color, counts.vectorColors.get(task.vector.color) + 1);
   if (task.dimension === 1) {
     counts.oneDimensional += 1;
     if (task.systemKind === 'cardinal') {
@@ -167,5 +174,8 @@ for (const [direction, count] of counts.cardinalDirections) {
 }
 assertNear(counts.standardXPositive / counts.standardCount, 0.5, 0.01, 'Standard x orientation');
 assertNear(counts.standardYPositive / counts.standardCount, 0.5, 0.01, 'Standard y orientation');
+for (const [color, count] of counts.vectorColors) {
+  assert.ok(count > 0, `Vector color ${color} was never selected.`);
+}
 
-console.log('Task geometry and probability contracts verified across 100000 seeded tasks');
+console.log('Task geometry, color, and probability contracts verified across 100000 seeded tasks');

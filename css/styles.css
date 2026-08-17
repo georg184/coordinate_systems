@@ -10,6 +10,7 @@
   --accent-dark: #0f477f;
   --accent-soft: #e9f2fc;
   --vector: #145ca8;
+  --vector-color: var(--vector);
   --axes: #cf2f3f;
   --success: #18733a;
   --success-soft: #edf8f0;
@@ -172,17 +173,9 @@ p {
   line-height: 1;
 }
 
-.intro-screen {
+.result-screen {
   width: min(860px, 100%);
   margin: 0 auto;
-}
-
-.intro-panel {
-  padding: clamp(24px, 5vw, 46px);
-}
-
-.intro-copy {
-  max-width: 720px;
 }
 
 .eyebrow {
@@ -194,50 +187,10 @@ p {
   text-transform: uppercase;
 }
 
-.intro-copy h2,
 .result-panel h2 {
   margin-bottom: 12px;
   font-size: clamp(1.35rem, 2.8vw, 1.85rem);
   line-height: 1.2;
-}
-
-.intro-copy > p:last-child {
-  margin-bottom: 0;
-  color: var(--muted);
-  font-size: 1.04rem;
-  line-height: 1.58;
-}
-
-.intro-facts {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin: 28px 0;
-}
-
-.fact-card {
-  display: grid;
-  align-content: start;
-  gap: 7px;
-  min-height: 132px;
-  padding: 16px;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  background: var(--panel-soft);
-}
-
-.fact-title {
-  font-weight: 800;
-}
-
-.fact-text {
-  color: var(--muted);
-  font-size: 0.92rem;
-  line-height: 1.43;
-}
-
-.intro-start-button {
-  min-width: 168px;
 }
 
 .quiz-screen {
@@ -246,7 +199,7 @@ p {
 
 .quiz-top-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   margin-bottom: 14px;
 }
@@ -301,7 +254,7 @@ p {
 }
 
 .vector-swatch {
-  border-color: var(--vector);
+  border-color: var(--vector-color);
 }
 
 .axes-swatch {
@@ -345,7 +298,7 @@ p {
 }
 
 .diagram-label-vector {
-  color: var(--vector);
+  color: var(--vector-color);
   font-size: clamp(18px, 2.5vw, 24px);
 }
 
@@ -355,9 +308,11 @@ p {
 }
 
 .diagram-label-magnitude {
-  color: var(--vector);
+  transform: translate(-100%, -100%);
+  color: var(--vector-color);
   font-size: clamp(14px, 1.9vw, 18px);
   font-weight: 650;
+  white-space: nowrap;
 }
 
 .task-panel {
@@ -410,14 +365,6 @@ p {
   font-size: 1.06rem;
   font-weight: 700;
   line-height: 1.45;
-}
-
-.magnitude-info {
-  padding: 10px 12px;
-  border-left: 4px solid var(--vector);
-  border-radius: 8px;
-  background: var(--accent-soft);
-  font-weight: 700;
 }
 
 .mathjax-content mjx-container {
@@ -660,19 +607,6 @@ p {
   .language-option {
     width: 36px;
     min-height: 36px;
-  }
-
-  .intro-facts {
-    grid-template-columns: 1fr;
-  }
-
-  .fact-card {
-    min-height: 0;
-  }
-
-  .quiz-top-row {
-    display: grid;
-    grid-template-columns: 1fr;
   }
 
   .diagram-panel,
