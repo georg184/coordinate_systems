@@ -60,6 +60,8 @@ assert.match(indexSource, /class="coordinate-parenthesis parenthesis-left"[^>]*>
 assert.match(indexSource, /class="coordinate-parenthesis parenthesis-right"[^>]*>\)<\/span>/);
 assert.doesNotMatch(indexSource, /coordinate-bracket|bracket-left|bracket-right/);
 assert.match(cssSource, /\.coordinate-parenthesis\s*\{/);
+assert.match(cssSource, /\.task-question\s*\{[^}]*text-align: right;/s);
+assert.match(cssSource, /\.task-question\s*\{[^}]*hyphens: auto;/s);
 assert.match(appSource, /controls\.coordinateSymbol/);
 assert.match(appSource, /const formula = `\\\\vec\{/);
 assert.doesNotMatch(appSource, /\\\\left\[/);
