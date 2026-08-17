@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.6';
+const APP_VERSION = '20260817.7';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -545,15 +545,6 @@ function appendVector(svg, task, labelContainer) {
     task.vector.points.end.column,
     task.vector.points.end.row
   );
-  svg.appendChild(createSvgElement('circle', {
-    cx: start.x,
-    cy: start.y,
-    r: 5,
-    fill: task.vector.color,
-    stroke: '#ffffff',
-    'stroke-width': 1.8,
-    'vector-effect': 'non-scaling-stroke'
-  }));
   svg.appendChild(createSvgElement('line', {
     x1: start.x,
     y1: start.y,

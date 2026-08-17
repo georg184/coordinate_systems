@@ -72,6 +72,7 @@ assert.match(coreSource, /color: vectorColor/);
 assert.match(appSource, /const AXIS_COLOR = '#cf2f3f'/);
 assert.match(appSource, /markerDefinition\('vector-arrow', task\.vector\.color/);
 assert.match(appSource, /markerDefinition\('axis-arrow', AXIS_COLOR/);
+assert.doesNotMatch(appSource, /createSvgElement\('circle'/);
 assert.match(appSource, /function magnitudeLabelPoint\(\)/);
 assert.match(appSource, /magnitudeLabelPoint\(\),\s*'diagram-label-magnitude'/);
 assert.doesNotMatch(appSource, /labelPoints\.magnitude/);

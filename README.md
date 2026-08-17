@@ -78,11 +78,11 @@ The selected language is stored in `sessionStorage` and remains consistent acros
 
 Mathematical questions, vector symbols, coordinate formulas, axis names, vector names, and magnitudes use pinned MathJax `3.2.2` with TeX input and CommonHTML output. Diagram labels are transparent HTML overlays; they must not receive opaque backgrounds or text-shadow halos.
 
-The grid, vector, endpoints, arrowheads, and red coordinate axes are renderer-native inline SVG. The SVG uses one fixed view box, while overlay coordinates are stored as percentages of that same box so responsive scaling cannot separate labels from the drawing.
+The grid, vector shaft, arrowhead, and red coordinate axes are renderer-native inline SVG. The vector tail has no point marker. The SVG uses one fixed view box, while overlay coordinates are stored as percentages of that same box so responsive scaling cannot separate labels from the drawing.
 
 ## Cache And Version Safety
 
-Current application version: `20260817.6`.
+Current application version: `20260817.7`.
 
 The version must remain identical in:
 
@@ -115,7 +115,7 @@ Browser verification should cover:
 - standard and rotated two-dimensional systems
 - randomly selected non-red vector colors with consistently red coordinate axes
 - exact magnitude at the bottom right of the grid and square-root input
-- visible vector endpoints on grid intersections
+- vector tail and tip on grid intersections, with no point marker at the tail
 - red axes remaining short, oriented, orthogonal in 2D, and correctly labelled
 - transparent MathJax overlays without stale or duplicate labels after rapid task/language changes
 - desktop, tablet, and phone widths without horizontal overflow
