@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interaktives Quiz zu Vektorkoordinaten in unterschiedlich orientierten Koordinatensystemen" />
+  <title>Vektoren koordinatisieren</title>
+  <script>window.GG_APP_VERSION = '20260817.1';</script>
+  <link rel="stylesheet" href="css/styles.css?v=20260817.1" />
+  <script src="js/mathjax-config.js?v=20260817.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+  <script src="js/quiz-core.js?v=20260817.1"></script>
+</head>
+<body>
+  <div class="language-switcher" role="group" aria-label="Sprachauswahl">
+    <button id="langDeButton" class="language-option is-active" type="button" aria-pressed="true" aria-label="Deutsch" title="Deutsch">
+      <span class="language-flag" aria-hidden="true">🇩🇪</span>
+    </button>
+    <button id="langEnButton" class="language-option" type="button" aria-pressed="false" aria-label="English" title="English">
+      <span class="language-flag" aria-hidden="true">🇬🇧</span>
+    </button>
+    <button id="langFrButton" class="language-option" type="button" aria-pressed="false" aria-label="Français" title="Français">
+      <span class="language-flag" aria-hidden="true">🇫🇷</span>
+    </button>
+  </div>
+
+  <main>
+    <h1 id="mainHeading">Vektoren koordinatisieren</h1>
+
+    <section id="introScreen" class="screen intro-screen">
+      <div class="panel intro-panel">
+        <div class="intro-copy">
+          <p id="introEyebrow" class="eyebrow">Koordinatendarstellungen</p>
+          <h2 id="introTitle">Lies einen Vektor im roten Koordinatensystem ab</h2>
+          <p id="introDescription">Das Gitter zeigt den Vektor. Die kurzen roten Achsen legen fest, in welchen Richtungen seine Koordinaten gemessen werden.</p>
+        </div>
+
+        <div id="introFacts" class="intro-facts" aria-label="Quizhinweise">
+          <div class="fact-card">
+            <span id="introFactOneTitle" class="fact-title">1D oder 2D</span>
+            <span id="introFactOneText" class="fact-text">Das Koordinatensystem wird für jede Aufgabe neu ausgelost.</span>
+          </div>
+          <div class="fact-card">
+            <span id="introFactTwoTitle" class="fact-title">Richtung beachten</span>
+            <span id="introFactTwoText" class="fact-text">Auch nach links oder unten gerichtete Achsen sind möglich.</span>
+          </div>
+          <div class="fact-card">
+            <span id="introFactThreeTitle" class="fact-title">Manchmal unmöglich</span>
+            <span id="introFactThreeText" class="fact-text">In 1D muss der Vektor parallel zur einzigen Achse sein.</span>
+          </div>
+        </div>
+
+        <button id="startQuizButton" class="primary-button intro-start-button" type="button">Quiz öffnen</button>
+      </div>
+    </section>
+
+    <section id="quizScreen" class="screen quiz-screen hidden">
+      <div class="quiz-top-row">
+        <button id="backButton" class="secondary-button" type="button" title="Zur Startseite wechseln. Der aktuelle Stand bleibt erhalten.">Zur Startseite</button>
+        <button id="nextButton" class="primary-button" type="button" title="Unbeantwortete Aufgabe überspringen und mit 0 Punkten werten.">Nächste Aufgabe</button>
+      </div>
+
+      <div class="quiz-layout">
+        <section class="diagram-panel" aria-labelledby="diagramHeading">
+          <div class="diagram-panel-header">
+            <h2 id="diagramHeading">Vektor und Koordinatensystem</h2>
+            <div class="diagram-legend" aria-label="Legende">
+              <span class="legend-item"><span class="legend-line vector-swatch" aria-hidden="true"></span><span id="vectorLegend">Vektor</span></span>
+              <span class="legend-item"><span class="legend-line axes-swatch" aria-hidden="true"></span><span id="axesLegend">Koordinatenachsen</span></span>
+            </div>
+          </div>
+          <div id="coordinateDiagram" class="coordinate-diagram" role="img" aria-label="Gitter mit einem Vektor und einem roten Koordinatensystem"></div>
+        </section>
+
+        <section class="panel task-panel" aria-labelledby="taskPanelHeading">
+          <h2 id="taskPanelHeading" class="sr-only">Aufgabe</h2>
+          <div class="task-status-row">
+            <div id="taskCounter" class="task-counter"></div>
+            <div id="scoreCounter" class="score-counter" aria-live="polite"></div>
+            <div id="timeCounter" class="time-counter" aria-live="off"></div>
+          </div>
+
+          <div id="roundStartPanel" class="round-start-panel">
+            <p id="roundStartText">Die erste Zeichnung ist bereit. Die Zeit beginnt erst mit einem Klick auf Start.</p>
+            <button id="beginRoundButton" class="primary-button" type="button">Start</button>
+          </div>
+
+          <div id="questionArea" class="question-area hidden">
+            <div id="taskQuestion" class="task-question mathjax-content"></div>
+            <div id="magnitudeInfo" class="magnitude-info mathjax-content hidden"></div>
+
+            <form id="answerForm" class="answer-form">
+              <fieldset class="answer-fieldset">
+                <legend id="answerLegend">Koordinatendarstellung</legend>
+                <div id="coordinateInputFrame" class="coordinate-input-frame dimension-two">
+                  <span class="coordinate-bracket bracket-left" aria-hidden="true"></span>
+                  <div class="coordinate-inputs">
+                    <label class="coordinate-input-label" for="xCoordinateInput">
+                      <span id="xCoordinateLabel" class="sr-only">x-Koordinate</span>
+                      <input id="xCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="x" />
+                    </label>
+                    <label id="yCoordinateInputLabel" class="coordinate-input-label" for="yCoordinateInput">
+                      <span id="yCoordinateLabel" class="sr-only">y-Koordinate</span>
+                      <input id="yCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder="y" />
+                    </label>
+                  </div>
+                  <span class="coordinate-bracket bracket-right" aria-hidden="true"></span>
+                </div>
+
+                <button id="impossibleButton" class="impossible-button" type="button" aria-pressed="false">Nicht koordinatisierbar</button>
+                <p id="inputHint" class="input-hint">Wurzeln kannst du zum Beispiel als sqrt(5) eingeben.</p>
+              </fieldset>
+              <button id="checkButton" class="primary-button check-button" type="submit">Prüfen</button>
+            </form>
+
+            <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
+            <div id="solution" class="solution mathjax-content hidden"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section id="resultScreen" class="screen intro-screen hidden">
+      <div class="panel result-panel">
+        <p id="resultEyebrow" class="eyebrow">Auswertung</p>
+        <h2 id="resultTitle">Runde abgeschlossen</h2>
+        <div id="resultScore" class="result-score" aria-live="polite"></div>
+        <p id="resultDetail" class="result-detail"></p>
+        <div id="resultTime" class="result-time"></div>
+        <div class="result-actions">
+          <button id="newRoundButton" class="primary-button" type="button">Neues Quiz starten</button>
+          <button id="resultHomeButton" class="secondary-button" type="button">Zur Startseite</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="version-badge" aria-label="Version">v2026.08.17.1</div>
+
+  <script src="js/app.js?v=20260817.1"></script>
+</body>
+</html>
