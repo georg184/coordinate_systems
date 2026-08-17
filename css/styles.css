@@ -364,7 +364,8 @@ p {
   min-height: 58px;
   font-size: 1.06rem;
   font-weight: 700;
-  text-align: right;
+  text-align: justify;
+  text-align-last: left;
   -webkit-hyphens: auto;
   hyphens: auto;
   line-height: 1.45;

@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260817.5';
+  const VERSION = '20260817.6';
   const CONFIG = Object.freeze({
     oneDimensionalProbability: 0.5,
     oneDimensionalCardinalProbability: 0.7,

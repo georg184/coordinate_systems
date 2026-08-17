@@ -60,8 +60,10 @@ assert.match(indexSource, /class="coordinate-parenthesis parenthesis-left"[^>]*>
 assert.match(indexSource, /class="coordinate-parenthesis parenthesis-right"[^>]*>\)<\/span>/);
 assert.doesNotMatch(indexSource, /coordinate-bracket|bracket-left|bracket-right/);
 assert.match(cssSource, /\.coordinate-parenthesis\s*\{/);
-assert.match(cssSource, /\.task-question\s*\{[^}]*text-align: right;/s);
+assert.match(cssSource, /\.task-question\s*\{[^}]*text-align: justify;/s);
+assert.match(cssSource, /\.task-question\s*\{[^}]*text-align-last: left;/s);
 assert.match(cssSource, /\.task-question\s*\{[^}]*hyphens: auto;/s);
+assert.ok((appSource.match(/&shy;/g) || []).length >= 10, 'Missing multilingual discretionary hyphens.');
 assert.match(appSource, /controls\.coordinateSymbol/);
 assert.match(appSource, /const formula = `\\\\vec\{/);
 assert.doesNotMatch(appSource, /\\\\left\[/);

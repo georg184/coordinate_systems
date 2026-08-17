@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260817.5';
+const APP_VERSION = '20260817.6';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -88,8 +88,8 @@ const TEXT = {
       roundStartText: 'Die erste Zeichnung ist bereit. Die Zeit beginnt erst mit einem Klick auf Start.',
       begin: 'Start',
       question: function(vectorLatex, dimension) {
-        const adjective = dimension === 1 ? 'eindimensionalen' : 'zweidimensionalen';
-        return `Bestimme die Koordinatendarstellung von \\(\\vec{${vectorLatex}}\\) bezüglich des roten ${adjective} Koordinatensystems.`;
+        const adjective = dimension === 1 ? 'ein&shy;dimensionalen' : 'zwei&shy;dimensionalen';
+        return `Bestimme die Koordinaten&shy;darstellung von \\(\\vec{${vectorLatex}}\\) bezüglich des roten ${adjective} Koordinaten&shy;systems.`;
       },
       answerLegend: 'Koordinatendarstellung',
       xCoordinateAria: 'x-Koordinate',
@@ -142,7 +142,7 @@ const TEXT = {
       roundStartText: 'The first diagram is ready. The timer starts only when you press Start.',
       begin: 'Start',
       question: function(vectorLatex, dimension) {
-        return `Give the coordinate representation of \\(\\vec{${vectorLatex}}\\) with respect to the red ${dimension}D coordinate system.`;
+        return `Give the coor&shy;dinate represen&shy;tation of \\(\\vec{${vectorLatex}}\\) with respect to the red ${dimension}D coor&shy;dinate system.`;
       },
       answerLegend: 'Coordinate representation',
       xCoordinateAria: 'x-coordinate',
@@ -195,7 +195,7 @@ const TEXT = {
       roundStartText: 'Le premier dessin est prêt. Le chronomètre ne démarre qu’après un clic sur Démarrer.',
       begin: 'Démarrer',
       question: function(vectorLatex, dimension) {
-        return `Donne la représentation en coordonnées de \\(\\vec{${vectorLatex}}\\) dans le repère rouge à ${dimension} dimension${dimension === 1 ? '' : 's'}.`;
+        return `Donne la repré&shy;sentation en coor&shy;données de \\(\\vec{${vectorLatex}}\\) dans le repère rouge à ${dimension} dimen&shy;sion${dimension === 1 ? '' : 's'}.`;
       },
       answerLegend: 'Représentation en coordonnées',
       xCoordinateAria: 'Coordonnée x',
