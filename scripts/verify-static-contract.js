@@ -60,6 +60,8 @@ assert.match(indexSource, /class="coordinate-parenthesis parenthesis-left"[^>]*>
 assert.match(indexSource, /class="coordinate-parenthesis parenthesis-right"[^>]*>\)<\/span>/);
 assert.doesNotMatch(indexSource, /coordinate-bracket|bracket-left|bracket-right/);
 assert.match(cssSource, /\.coordinate-parenthesis\s*\{/);
+assert.match(cssSource, /\.coordinate-parenthesis\s*\{[^}]*translateY\(-5px\) scaleX\(0\.62\)/s);
+assert.match(cssSource, /\.dimension-one \.coordinate-parenthesis\s*\{[^}]*translateY\(-5px\) scaleX\(0\.62\)/s);
 assert.match(cssSource, /\.task-question\s*\{[^}]*text-align: justify;/s);
 assert.match(cssSource, /\.task-question\s*\{[^}]*text-align-last: left;/s);
 assert.match(cssSource, /\.task-question\s*\{[^}]*hyphens: auto;/s);

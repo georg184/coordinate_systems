@@ -465,13 +465,14 @@ p {
   font-size: 116px;
   font-weight: 400;
   line-height: 0.72;
-  transform: scaleX(0.62);
+  transform: translateY(-5px) scaleX(0.62);
   transform-origin: center;
   user-select: none;
 }
 
 .coordinate-input-frame.dimension-one .coordinate-parenthesis {
   font-size: 64px;
+  transform: translateY(-5px) scaleX(0.62);
 }
 
 .impossible-button {
