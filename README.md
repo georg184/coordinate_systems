@@ -13,10 +13,10 @@ The public version is intended to be available through GitHub Pages:
 The app opens on a mode-selection page modelled after `trigonometric_functions`:
 
 - **Vectors**: one randomly named and colored vector is shown. The origin is deliberately not marked because vector coordinates do not depend on the absolute position of the coordinate system.
-- **Points**: one randomly named and colored point is shown. The origin \(O\) is marked because point coordinates depend on absolute position.
+- **Points**: one randomly named and colored point is shown and expressed with respect to the complete displayed coordinate system. The origin \(O\) is marked because point coordinates depend on absolute position.
 - **Vectors and points**: one point and one vector share the same grid and must both be expressed in the displayed coordinate system. A question scores one point only when both responses are correct.
 
-The quiz and result screens both provide a route back to the start page. Selecting the same mode resumes an unfinished round; selecting a different mode starts a fresh round in that mode.
+The quiz and result screens both provide a route back to the start page. Selecting the same mode resumes an unfinished round; selecting a different mode starts a fresh round in that mode. The main heading is general on the start page and switches to the selected vector, point, or mixed mode everywhere else.
 
 ## Drawing And Mathematical Contract
 
@@ -122,7 +122,7 @@ The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes 
 
 ## Cache And Version Safety
 
-Current application version: `20260819.5`.
+Current application version: `20260819.6`.
 
 The version must remain identical in:
 
@@ -149,6 +149,7 @@ node scripts/verify-static-contract.js
 Browser verification should cover:
 
 - the three localized start-page choices and same-mode resume behavior
+- mode-specific main headings on quiz and result screens, with the general heading restored on the start page
 - German, English, and French question, feedback, solution, and result text
 - the pre-start state, timer, answer, skip, next-question, and ten-question result flow
 - vector-only one-dimensional cardinal/tilted and two-dimensional standard/rotated systems

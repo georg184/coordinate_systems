@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.5';
+const APP_VERSION = '20260819.6';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -65,7 +65,11 @@ const DIAGRAM = Object.freeze({
 const TEXT = {
   de: {
     pageTitle: 'Koordinatisieren von Punkten und Vektoren',
-    heading: 'Koordinatisieren von Punkten und Vektoren',
+    heading: function(mode) {
+      if (mode === QUIZ_MODES.vectors) return 'Koordinatisieren von Vektoren';
+      if (mode === QUIZ_MODES.points) return 'Koordinatisieren von Punkten';
+      return 'Koordinatisieren von Punkten und Vektoren';
+    },
     languageSelectorAria: 'Sprachauswahl',
     intro: {
       accessTitle: 'Wähle den Aufgabentyp',
@@ -73,7 +77,7 @@ const TEXT = {
       vectorsTitle: 'Vektoren',
       vectorsDescription: 'Koordinatisiere Vektoren unabhängig von der Lage des roten Koordinatensystems.',
       pointsTitle: 'Punkte',
-      pointsDescription: 'Koordinatisiere Punkte bezüglich des eingezeichneten Ursprungs.',
+      pointsDescription: 'Koordinatisiere Punkte bezüglich des eingezeichneten Koordinatensystems.',
       mixedTitle: 'Vektoren und Punkte',
       mixedDescription: 'Koordinatisiere einen Punkt und einen Vektor gemeinsam im selben Raster.'
     },
@@ -159,7 +163,11 @@ const TEXT = {
   },
   en: {
     pageTitle: 'Coordinates of Points and Vectors',
-    heading: 'Coordinates of Points and Vectors',
+    heading: function(mode) {
+      if (mode === QUIZ_MODES.vectors) return 'Coordinates of Vectors';
+      if (mode === QUIZ_MODES.points) return 'Coordinates of Points';
+      return 'Coordinates of Points and Vectors';
+    },
     languageSelectorAria: 'Language selector',
     intro: {
       accessTitle: 'Choose the question type',
@@ -167,7 +175,7 @@ const TEXT = {
       vectorsTitle: 'Vectors',
       vectorsDescription: 'Express vectors independently of the position of the red coordinate system.',
       pointsTitle: 'Points',
-      pointsDescription: 'Give point coordinates relative to the marked origin.',
+      pointsDescription: 'Give point coordinates with respect to the displayed coordinate system.',
       mixedTitle: 'Vectors and Points',
       mixedDescription: 'Express one point and one vector together on the same grid.'
     },
@@ -248,7 +256,11 @@ const TEXT = {
   },
   fr: {
     pageTitle: 'Coordonnées de points et de vecteurs',
-    heading: 'Coordonnées de points et de vecteurs',
+    heading: function(mode) {
+      if (mode === QUIZ_MODES.vectors) return 'Coordonnées de vecteurs';
+      if (mode === QUIZ_MODES.points) return 'Coordonnées de points';
+      return 'Coordonnées de points et de vecteurs';
+    },
     languageSelectorAria: 'Sélecteur de langue',
     intro: {
       accessTitle: 'Choisis le type de questions',
@@ -256,7 +268,7 @@ const TEXT = {
       vectorsTitle: 'Vecteurs',
       vectorsDescription: 'Exprime les vecteurs indépendamment de la position du repère rouge.',
       pointsTitle: 'Points',
-      pointsDescription: 'Donne les coordonnées des points par rapport à l’origine indiquée.',
+      pointsDescription: 'Donne les coordonnées des points dans le repère indiqué.',
       mixedTitle: 'Vecteurs et points',
       mixedDescription: 'Exprime un point et un vecteur ensemble sur le même quadrillage.'
     },
@@ -477,11 +489,19 @@ function getTextBundle() {
   return TEXT[currentLanguage] || TEXT.de;
 }
 
+function updateMainHeading() {
+  const mode = controls.introScreen.classList.contains('hidden')
+    ? activeQuizMode
+    : null;
+  controls.mainHeading.textContent = getTextBundle().heading(mode);
+}
+
 function showScreen(name) {
   Object.entries(screens).forEach(function(entry) {
     const [screenName, element] = entry;
     element.classList.toggle('hidden', screenName !== name);
   });
+  updateMainHeading();
 }
 
 function isSupportedLanguage(language) {
@@ -1108,7 +1128,7 @@ function applyLanguage() {
   document.documentElement.lang = currentLanguage;
   document.title = texts.pageTitle;
   controls.languageSwitcher.setAttribute('aria-label', texts.languageSelectorAria);
-  controls.mainHeading.textContent = texts.heading;
+  updateMainHeading();
   controls.introAccessTitle.textContent = texts.intro.accessTitle;
   controls.introChoiceList.setAttribute('aria-label', texts.intro.choiceListAria);
   controls.startVectorsTitle.textContent = texts.intro.vectorsTitle;

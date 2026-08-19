@@ -53,11 +53,24 @@ assert.match(indexSource, /id="startPointsButton"/);
 assert.match(indexSource, /id="startMixedButton"/);
 assert.match(indexSource, /id="backButton"/);
 assert.match(indexSource, /id="resultHomeButton"/);
+assert.match(indexSource, /Koordinatisiere Punkte bezüglich des eingezeichneten Koordinatensystems\./);
 assert.match(cssSource, /\.intro-choice-list\s*\{[^}]*repeat\(3,/s);
 assert.match(appSource, /startQuiz\(QUIZ_MODES\.vectors\)/);
 assert.match(appSource, /startQuiz\(QUIZ_MODES\.points\)/);
 assert.match(appSource, /startQuiz\(QUIZ_MODES\.mixed\)/);
 assert.match(appSource, /applyLanguage\(\);\s*showScreen\('intro'\);/);
+assert.doesNotMatch(indexSource + appSource, /bezüglich des eingezeichneten Ursprungs/);
+assert.doesNotMatch(appSource, /relative to the marked origin/);
+assert.doesNotMatch(appSource, /par rapport à l’origine indiquée/);
+assert.match(appSource, /Koordinatisieren von Vektoren/);
+assert.match(appSource, /Koordinatisieren von Punkten/);
+assert.match(appSource, /Coordinates of Vectors/);
+assert.match(appSource, /Coordinates of Points/);
+assert.match(appSource, /Coordonnées de vecteurs/);
+assert.match(appSource, /Coordonnées de points/);
+assert.match(appSource, /function updateMainHeading\(\)/);
+assert.match(appSource, /controls\.introScreen\.classList\.contains\('hidden'\)[\s\S]*activeQuizMode/);
+assert.match(appSource, /function showScreen\(name\)[\s\S]*updateMainHeading\(\);\s*\}/);
 
 for (const language of ['de', 'en', 'fr']) {
   assert.match(appSource, new RegExp(`\\n  ${language}: \\{`), `Missing ${language} translations.`);
