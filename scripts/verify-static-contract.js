@@ -68,6 +68,12 @@ assert.match(appSource, /Coordonnées de points et de vecteurs/);
 assert.match(appSource, /one-dimensional coordinate system/);
 assert.match(appSource, /eindimensionalen Koordinatensystem/);
 assert.match(appSource, /repère à une dimension/);
+assert.doesNotMatch(appSource, /Pfeilrichtung/);
+assert.doesNotMatch(appSource, /arrow direction/i);
+assert.doesNotMatch(appSource, /sens de la flèche/i);
+assert.match(appSource, /in oder gegen die vorgegebene Orientierung/);
+assert.match(appSource, /along or against the specified orientation/);
+assert.match(appSource, /suit l’orientation donnée ou lui est opposé/);
 assert.ok((appSource.match(/&shy;/g) || []).length >= 18, 'Missing multilingual discretionary hyphens.');
 
 for (const id of [

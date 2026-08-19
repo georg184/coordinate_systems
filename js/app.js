@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.4';
+const APP_VERSION = '20260819.5';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -136,14 +136,14 @@ const TEXT = {
       correct: 'Richtig.',
       incorrect: 'Falsch.',
       invalid: 'Mindestens eine Eingabe konnte nicht gelesen werden.',
-      vectorPossible1d: 'Der Vektor ist parallel zur einzigen roten Achse. Das Vorzeichen folgt ihrer Pfeilrichtung.',
-      vectorPossibleStandard: 'Die Verschiebung wird in den beiden roten Pfeilrichtungen abgelesen.',
+      vectorPossible1d: 'Der Vektor ist parallel zur einzigen roten Achse. Das Vorzeichen ergibt sich daraus, ob der Vektor in oder gegen die vorgegebene Orientierung zeigt.',
+      vectorPossibleStandard: 'Für jede rote Achse wird die Verschiebung in oder gegen die vorgegebene Orientierung abgelesen.',
       vectorPossibleRotated: function(axisName) {
         return `Der Vektor ist parallel zur roten \\(${axisName}\\)-Achse; seine andere Koordinate ist \\(0\\).`;
       },
       vectorImpossibleExplanation: 'Der Vektor ist nicht parallel zur einzigen roten Achse. In diesem eindimensionalen Koordinatensystem besitzt er deshalb keine Koordinatendarstellung.',
       pointPossible1d: 'Der Punkt liegt auf der roten Achse. Seine Koordinate ist der orientierte Abstand vom Ursprung \\(O\\) in Gittereinheiten.',
-      pointPossible2d: 'Vom Ursprung \\(O\\) aus werden die Verschiebungen in den beiden roten Pfeilrichtungen gezählt.',
+      pointPossible2d: 'Vom Ursprung \\(O\\) aus wird die Verschiebung für jede rote Achse in oder gegen die vorgegebene Orientierung gezählt.',
       pointImpossibleExplanation: 'Der Punkt liegt nicht auf der einzigen roten Achse. In diesem eindimensionalen Koordinatensystem besitzt er deshalb keine Koordinatendarstellung.',
       solutionLead: 'Lösung:'
     },
@@ -225,14 +225,14 @@ const TEXT = {
       correct: 'Correct.',
       incorrect: 'Wrong.',
       invalid: 'At least one input could not be read.',
-      vectorPossible1d: 'The vector is parallel to the only red axis. Its sign follows the arrow direction.',
-      vectorPossibleStandard: 'Read the displacement in the two red arrow directions.',
+      vectorPossible1d: 'The vector is parallel to the only red axis. Its sign depends on whether the vector points along or against the specified orientation.',
+      vectorPossibleStandard: 'For each red axis, read the displacement along or against the specified orientation.',
       vectorPossibleRotated: function(axisName) {
         return `The vector is parallel to the red \\(${axisName}\\)-axis; its other coordinate is \\(0\\).`;
       },
       vectorImpossibleExplanation: 'The vector is not parallel to the only red axis. It therefore has no coordinate representation in this one-dimensional coordinate system.',
       pointPossible1d: 'The point lies on the red axis. Its coordinate is the oriented distance from origin \\(O\\) in grid units.',
-      pointPossible2d: 'Count the displacements from origin \\(O\\) in the two red arrow directions.',
+      pointPossible2d: 'From origin \\(O\\), count the displacement along or against the specified orientation of each red axis.',
       pointImpossibleExplanation: 'The point does not lie on the only red axis. It therefore has no coordinate representation in this one-dimensional coordinate system.',
       solutionLead: 'Solution:'
     },
@@ -316,14 +316,14 @@ const TEXT = {
       correct: 'Correct.',
       incorrect: 'Faux.',
       invalid: 'Au moins une saisie n’a pas pu être interprétée.',
-      vectorPossible1d: 'Le vecteur est parallèle à l’unique axe rouge. Son signe dépend du sens de la flèche.',
-      vectorPossibleStandard: 'Le déplacement se lit dans les deux directions rouges indiquées par les flèches.',
+      vectorPossible1d: 'Le vecteur est parallèle à l’unique axe rouge. Son signe dépend du fait que le vecteur suit l’orientation donnée ou lui est opposé.',
+      vectorPossibleStandard: 'Pour chaque axe rouge, détermine si le déplacement suit l’orientation donnée ou lui est opposé.',
       vectorPossibleRotated: function(axisName) {
         return `Le vecteur est parallèle à l’axe rouge \\(${axisName}\\) ; son autre coordonnée vaut \\(0\\).`;
       },
       vectorImpossibleExplanation: 'Le vecteur n’est pas parallèle à l’unique axe rouge. Il ne possède donc pas de représentation dans ce repère à une dimension.',
       pointPossible1d: 'Le point se trouve sur l’axe rouge. Sa coordonnée est la distance orientée depuis l’origine \\(O\\), en unités du quadrillage.',
-      pointPossible2d: 'Depuis l’origine \\(O\\), compte les déplacements dans les deux directions rouges indiquées par les flèches.',
+      pointPossible2d: 'Depuis l’origine \\(O\\), détermine pour chaque axe rouge si le déplacement vers le point suit l’orientation donnée ou lui est opposé.',
       pointImpossibleExplanation: 'Le point ne se trouve pas sur l’unique axe rouge. Il ne possède donc pas de représentation dans ce repère à une dimension.',
       solutionLead: 'Solution :'
     },

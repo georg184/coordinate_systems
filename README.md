@@ -90,6 +90,8 @@ Vector names are selected from `a`, `b`, `c`, `u`, `v`, and `w`. The coordinate-
 
 Question prompts use justified text with a conventional left-aligned final line and language-aware automatic hyphenation inherited from the active document language.
 
+Solution explanations describe signs exclusively through the specified axis orientation: an object or displacement lies along that orientation or against it.
+
 ## Project Structure
 
 - `index.html`: start page, quiz/result markup, German fallback text, MathJax bootstrap, and versioned local assets
@@ -120,7 +122,7 @@ The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes 
 
 ## Cache And Version Safety
 
-Current application version: `20260819.4`.
+Current application version: `20260819.5`.
 
 The version must remain identical in:
 
