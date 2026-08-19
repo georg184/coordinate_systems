@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.1';
+const APP_VERSION = '20260819.2';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -726,15 +726,30 @@ function appendCoordinateAxes(svg, task, labelContainer) {
       'vector-effect': 'non-scaling-stroke'
     }));
     if (task.showAxisLabels) {
+      const labelDirection = task.showOrigin
+        ? { x: direction.x / 2, y: direction.y / 2 }
+        : direction;
       addDiagramLabel(
         labelContainer,
-        pointBeyondArrow(origin, direction, 14),
+        pointBeyondArrow(origin, labelDirection, 14),
         'diagram-label-axis',
         `\\(${axis.name}\\)`
       );
     }
   });
   if (task.showOrigin) {
+    if (task.dimension === 1) {
+      svg.appendChild(createSvgElement('circle', {
+        class: 'origin-marker',
+        cx: origin.x,
+        cy: origin.y,
+        r: 5,
+        fill: AXIS_COLOR,
+        stroke: '#ffffff',
+        'stroke-width': 2,
+        'vector-effect': 'non-scaling-stroke'
+      }));
+    }
     addDiagramLabel(
       labelContainer,
       { x: origin.x - 14, y: origin.y + 17 },

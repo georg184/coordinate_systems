@@ -37,9 +37,9 @@ For tilted systems, the exact vector magnitude is displayed in a reserved area a
 
 - The coordinate-system origin is selected at a grid intersection and marked with a transparent MathJax \(O\) label.
 - Red axes are horizontal or vertical only; tilted systems are never generated.
-- Axis names are omitted. Arrow directions still define the positive directions.
+- The oriented axes are labelled \(x\), and \(y\) in two dimensions.
 - Each complete axis segment has the same short total length as the previous cardinal reference axis.
-- In one dimension, \(O\) is the midpoint of the sole red axis.
+- In one dimension, \(O\) is the midpoint of the sole red axis and is additionally marked by a visible red point.
 - A point is represented by an actual colored point marker at a grid intersection and a MathJax name label.
 - A point in one dimension is representable exactly when it lies on the sole axis.
 - In mixed mode the point is kept off the vector shaft for visual clarity. The vector answer remains independent of the marked origin.
@@ -119,7 +119,7 @@ The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes 
 
 ## Cache And Version Safety
 
-Current application version: `20260819.1`.
+Current application version: `20260819.2`.
 
 The version must remain identical in:
 
@@ -150,7 +150,7 @@ Browser verification should cover:
 - the pre-start state, timer, answer, skip, next-question, and ten-question result flow
 - vector-only one-dimensional cardinal/tilted and two-dimensional standard/rotated systems
 - point-only and mixed one-/two-dimensional cardinal systems
-- visible origin \(O\) and centered 1D axis only when a point is present
+- visible origin \(O\), a red 1D origin marker, and labelled axes when a point is present
 - one-dimensional point incidence and independent mixed non-representability controls
 - point marker and vector tail remaining visually distinct
 - dynamic MathJax component labels for both object types

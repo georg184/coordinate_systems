@@ -82,7 +82,7 @@ function verifyCoordinateSystem(task) {
   }
 
   assert.equal(task.showOrigin, true);
-  assert.equal(task.showAxisLabels, false);
+  assert.equal(task.showAxisLabels, true);
   assert.equal(task.isTilted, false);
   const origin = task.coordinateSystem.origin;
   assert.ok(Number.isInteger(origin.column));

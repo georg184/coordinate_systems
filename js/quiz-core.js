@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260819.1';
+  const VERSION = '20260819.2';
   const QUIZ_MODES = Object.freeze({
     vectors: 'vectors',
     points: 'points',
@@ -562,7 +562,7 @@
       isTilted: false,
       coordinateSystem,
       showOrigin: true,
-      showAxisLabels: false,
+      showAxisLabels: true,
       parallelAxis: null,
       vector,
       point
