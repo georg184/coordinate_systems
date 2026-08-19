@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Interaktives Quiz zu Vektorkoordinaten in unterschiedlich orientierten Koordinatensystemen" />
-  <title>Vektoren koordinatisieren</title>
-  <script>window.GG_APP_VERSION = '20260817.10';</script>
-  <link rel="stylesheet" href="css/styles.css?v=20260817.10" />
-  <script src="js/mathjax-config.js?v=20260817.10"></script>
+  <meta name="description" content="Interaktives Quiz zum Koordinatisieren von Punkten und Vektoren" />
+  <title>Koordinatisieren von Punkten und Vektoren</title>
+  <script>window.GG_APP_VERSION = '20260819.1';</script>
+  <link rel="stylesheet" href="css/styles.css?v=20260819.1" />
+  <script src="js/mathjax-config.js?v=20260819.1"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
-  <script src="js/quiz-core.js?v=20260817.10"></script>
+  <script src="js/quiz-core.js?v=20260819.1"></script>
 </head>
 <body>
   <div class="language-switcher" role="group" aria-label="Sprachauswahl">
@@ -25,10 +25,33 @@
   </div>
 
   <main>
-    <h1 id="mainHeading">Vektoren koordinatisieren</h1>
+    <h1 id="mainHeading">Koordinatisieren von Punkten und Vektoren</h1>
 
-    <section id="quizScreen" class="screen quiz-screen">
+    <section id="introScreen" class="screen intro-screen">
+      <div class="panel intro-panel">
+        <div id="introAccessTitle" class="intro-field-title">Wähle den Aufgabentyp</div>
+        <div id="introChoiceList" class="intro-choice-list" aria-label="Aufgabentyp auswählen">
+          <button id="startVectorsButton" class="intro-choice" type="button">
+            <span id="startVectorsTitle" class="intro-choice-title">Vektoren</span>
+            <span id="startVectorsDescription" class="intro-choice-description">Koordinatisiere Vektoren unabhängig von der Lage des roten Koordinatensystems.</span>
+          </button>
+
+          <button id="startPointsButton" class="intro-choice" type="button">
+            <span id="startPointsTitle" class="intro-choice-title">Punkte</span>
+            <span id="startPointsDescription" class="intro-choice-description">Koordinatisiere Punkte bezüglich des eingezeichneten Ursprungs.</span>
+          </button>
+
+          <button id="startMixedButton" class="intro-choice" type="button">
+            <span id="startMixedTitle" class="intro-choice-title">Vektoren und Punkte</span>
+            <span id="startMixedDescription" class="intro-choice-description">Koordinatisiere einen Punkt und einen Vektor gemeinsam im selben Raster.</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="quizScreen" class="screen quiz-screen hidden">
       <div class="quiz-top-row">
+        <button id="backButton" class="secondary-button" type="button" title="Zur Startseite wechseln.">Zur Startseite</button>
         <button id="nextButton" class="primary-button" type="button" title="Unbeantwortete Aufgabe überspringen und mit 0 Punkten werten.">Nächste Aufgabe</button>
       </div>
 
@@ -37,7 +60,8 @@
           <div class="diagram-panel-header">
             <h2 id="diagramHeading">Vektor und Koordinatensystem</h2>
             <div class="diagram-legend" aria-label="Legende">
-              <span class="legend-item"><span class="legend-line vector-swatch" aria-hidden="true"></span><span id="vectorLegend">Vektor</span></span>
+              <span id="vectorLegendItem" class="legend-item"><span class="legend-line vector-swatch" aria-hidden="true"></span><span id="vectorLegend">Vektor</span></span>
+              <span id="pointLegendItem" class="legend-item hidden"><span class="legend-point point-swatch" aria-hidden="true"></span><span id="pointLegend">Punkt</span></span>
               <span class="legend-item"><span class="legend-line axes-swatch" aria-hidden="true"></span><span id="axesLegend">Koordinatenachsen</span></span>
             </div>
           </div>
@@ -62,27 +86,52 @@
             <form id="answerForm" class="answer-form">
               <fieldset class="answer-fieldset">
                 <legend id="answerLegend">Koordinatendarstellung</legend>
-                <div class="coordinate-answer-entry">
-                  <span id="coordinateSymbol" class="coordinate-symbol mathjax-content"></span>
-                  <div id="coordinateInputFrame" class="coordinate-input-frame dimension-two">
-                    <span class="coordinate-parenthesis parenthesis-left" aria-hidden="true">(</span>
-                    <div class="coordinate-inputs">
-                      <label class="coordinate-input-label" for="xCoordinateInput">
-                        <span id="xCoordinateLabel" class="sr-only">x-Koordinate</span>
-                        <input id="xCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
-                        <span id="xCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(v_x\)</span>
-                      </label>
-                      <label id="yCoordinateInputLabel" class="coordinate-input-label" for="yCoordinateInput">
-                        <span id="yCoordinateLabel" class="sr-only">y-Koordinate</span>
-                        <input id="yCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
-                        <span id="yCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(v_y\)</span>
-                      </label>
+                <div id="pointAnswerGroup" class="object-answer-group hidden">
+                  <div class="coordinate-answer-entry">
+                    <span id="pointCoordinateSymbol" class="coordinate-symbol mathjax-content"></span>
+                    <div id="pointCoordinateInputFrame" class="coordinate-input-frame dimension-two">
+                      <span class="coordinate-parenthesis parenthesis-left" aria-hidden="true">(</span>
+                      <div class="coordinate-inputs">
+                        <label class="coordinate-input-label" for="pointXCoordinateInput">
+                          <span id="pointXCoordinateLabel" class="sr-only">x-Koordinate des Punktes</span>
+                          <input id="pointXCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
+                          <span id="pointXCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(P_x\)</span>
+                        </label>
+                        <label id="pointYCoordinateInputLabel" class="coordinate-input-label" for="pointYCoordinateInput">
+                          <span id="pointYCoordinateLabel" class="sr-only">y-Koordinate des Punktes</span>
+                          <input id="pointYCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
+                          <span id="pointYCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(P_y\)</span>
+                        </label>
+                      </div>
+                      <span class="coordinate-parenthesis parenthesis-right" aria-hidden="true">)</span>
                     </div>
-                    <span class="coordinate-parenthesis parenthesis-right" aria-hidden="true">)</span>
                   </div>
+                  <button id="pointImpossibleButton" class="impossible-button" type="button" aria-pressed="false">Punkt nicht koordinatisierbar</button>
                 </div>
 
-                <button id="impossibleButton" class="impossible-button" type="button" aria-pressed="false">Nicht koordinatisierbar</button>
+                <div id="vectorAnswerGroup" class="object-answer-group">
+                  <div class="coordinate-answer-entry">
+                    <span id="coordinateSymbol" class="coordinate-symbol mathjax-content"></span>
+                    <div id="coordinateInputFrame" class="coordinate-input-frame dimension-two">
+                      <span class="coordinate-parenthesis parenthesis-left" aria-hidden="true">(</span>
+                      <div class="coordinate-inputs">
+                        <label class="coordinate-input-label" for="xCoordinateInput">
+                          <span id="xCoordinateLabel" class="sr-only">x-Koordinate des Vektors</span>
+                          <input id="xCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
+                          <span id="xCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(v_x\)</span>
+                        </label>
+                        <label id="yCoordinateInputLabel" class="coordinate-input-label" for="yCoordinateInput">
+                          <span id="yCoordinateLabel" class="sr-only">y-Koordinate des Vektors</span>
+                          <input id="yCoordinateInput" type="text" inputmode="text" maxlength="80" autocomplete="off" spellcheck="false" placeholder=" " />
+                          <span id="yCoordinatePlaceholder" class="coordinate-input-placeholder mathjax-content" aria-hidden="true">\(v_y\)</span>
+                        </label>
+                      </div>
+                      <span class="coordinate-parenthesis parenthesis-right" aria-hidden="true">)</span>
+                    </div>
+                  </div>
+                  <button id="impossibleButton" class="impossible-button" type="button" aria-pressed="false">Vektor nicht koordinatisierbar</button>
+                </div>
+
                 <p id="inputHint" class="input-hint">Wurzeln kannst du zum Beispiel als sqrt(5), 2sqrt(5) oder √5 eingeben.</p>
               </fieldset>
               <button id="checkButton" class="primary-button check-button" type="submit">Prüfen</button>
@@ -104,13 +153,14 @@
         <div id="resultTime" class="result-time"></div>
         <div class="result-actions">
           <button id="newRoundButton" class="primary-button" type="button">Neues Quiz starten</button>
+          <button id="resultHomeButton" class="secondary-button" type="button">Zur Startseite</button>
         </div>
       </div>
     </section>
   </main>
 
-  <div class="version-badge" aria-label="Version">v2026.08.17.10</div>
+  <div class="version-badge" aria-label="Version">v2026.08.19.1</div>
 
-  <script src="js/app.js?v=20260817.10"></script>
+  <script src="js/app.js?v=20260819.1"></script>
 </body>
 </html>

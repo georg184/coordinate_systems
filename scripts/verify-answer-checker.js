@@ -27,42 +27,87 @@ assert.equal(quizCore.parseCoordinateExpression('1/0'), null);
 assert.equal(quizCore.parseCoordinateExpression('process.exit()'), null);
 assert.equal(quizCore.parseCoordinateExpression('2**3'), null);
 
-const possibleTask = {
+const possibleVectorTask = {
   dimension: 2,
-  answer: {
-    possible: true,
-    coordinates: [
-      { value: 2 * Math.sqrt(5) },
-      { value: -3 }
-    ]
+  vector: {
+    answer: {
+      possible: true,
+      coordinates: [
+        { value: 2 * Math.sqrt(5) },
+        { value: -3 }
+      ]
+    }
+  },
+  point: null
+};
+assert.equal(
+  quizCore.checkAnswer(possibleVectorTask, ['2sqrt(5)', '-3'], false).correct,
+  true
+);
+assert.equal(
+  quizCore.checkAnswer(possibleVectorTask, ['2√5', '-3.0'], false).correct,
+  true
+);
+assert.equal(
+  quizCore.checkAnswer(possibleVectorTask, ['sqrt(5)', '-3'], false).correct,
+  false
+);
+assert.equal(
+  quizCore.checkAnswer(possibleVectorTask, ['2sqrt(5)', '-3'], true).correct,
+  false
+);
+assert.equal(
+  quizCore.checkAnswer(possibleVectorTask, ['', '-3'], false).invalidInput,
+  true
+);
+
+const impossiblePointTask = {
+  dimension: 1,
+  vector: null,
+  point: {
+    answer: { possible: false, coordinates: null }
   }
 };
-assert.equal(
-  quizCore.checkAnswer(possibleTask, ['2sqrt(5)', '-3'], false).correct,
-  true
-);
-assert.equal(
-  quizCore.checkAnswer(possibleTask, ['2√5', '-3.0'], false).correct,
-  true
-);
-assert.equal(
-  quizCore.checkAnswer(possibleTask, ['sqrt(5)', '-3'], false).correct,
-  false
-);
-assert.equal(
-  quizCore.checkAnswer(possibleTask, ['2sqrt(5)', '-3'], true).correct,
-  false
-);
-assert.equal(
-  quizCore.checkAnswer(possibleTask, ['', '-3'], false).invalidInput,
-  true
-);
+assert.equal(quizCore.checkAnswer(impossiblePointTask, [''], true).correct, true);
+assert.equal(quizCore.checkAnswer(impossiblePointTask, ['7'], false).correct, false);
 
-const impossibleTask = {
+const mixedTask = {
   dimension: 1,
-  answer: { possible: false, coordinates: null }
+  point: {
+    answer: {
+      possible: true,
+      coordinates: [{ value: -4 }]
+    }
+  },
+  vector: {
+    answer: { possible: false, coordinates: null }
+  }
 };
-assert.equal(quizCore.checkAnswer(impossibleTask, [''], true).correct, true);
-assert.equal(quizCore.checkAnswer(impossibleTask, ['7'], false).correct, false);
+const correctMixed = quizCore.checkTaskAnswer(mixedTask, {
+  point: { coordinates: ['-4'], impossibleSelected: false },
+  vector: { coordinates: [''], impossibleSelected: true }
+});
+assert.equal(correctMixed.correct, true);
+assert.equal(correctMixed.invalidInput, false);
+assert.equal(correctMixed.objectResults.point.correct, true);
+assert.equal(correctMixed.objectResults.vector.correct, true);
 
-console.log('Coordinate expression and answer-checker contracts verified');
+const partiallyWrongMixed = quizCore.checkTaskAnswer(mixedTask, {
+  point: { coordinates: ['4'], impossibleSelected: false },
+  vector: { coordinates: [''], impossibleSelected: true }
+});
+assert.equal(partiallyWrongMixed.correct, false);
+assert.equal(partiallyWrongMixed.invalidInput, false);
+
+const invalidMixed = quizCore.checkTaskAnswer(mixedTask, {
+  point: { coordinates: [''], impossibleSelected: false },
+  vector: { coordinates: [''], impossibleSelected: true }
+});
+assert.equal(invalidMixed.correct, false);
+assert.equal(invalidMixed.invalidInput, true);
+assert.throws(
+  () => quizCore.checkAnswer(mixedTask, ['-4'], false),
+  /single-object task/
+);
+
+console.log('Single-object and mixed coordinate answer contracts verified');

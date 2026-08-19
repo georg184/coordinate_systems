@@ -1,6 +1,6 @@
 # coordinate_systems
 
-Interactive static quiz for expressing grid vectors in one- and two-dimensional orthogonal coordinate systems. The app is available in German, English, and French and uses inline SVG for the drawing plus MathJax for mathematical notation.
+Interactive static quiz for expressing points and vectors in one- and two-dimensional orthogonal coordinate systems. The app is available in German, English, and French and uses inline SVG for the drawing plus MathJax for mathematical notation.
 
 ## Live Version
 
@@ -8,37 +8,70 @@ The public version is intended to be available through GitHub Pages:
 
 <https://georg184.github.io/coordinate_systems/>
 
-## Learning Task
+## Start Page And Quiz Modes
 
-Every question shows:
+The app opens on a mode-selection page modelled after `trigonometric_functions`:
 
-- a square unit grid
-- a randomly named and randomly colored vector whose initial and terminal points lie on grid intersections
-- a short red one- or two-dimensional coordinate system near the left edge of the grid
-- oriented red axes labelled with MathJax-rendered `x` and, in two dimensions, `y`
+- **Vectors**: one randomly named and colored vector is shown. The origin is deliberately not marked because vector coordinates do not depend on the absolute position of the coordinate system.
+- **Points**: one randomly named and colored point is shown. The origin \(O\) is marked because point coordinates depend on absolute position.
+- **Vectors and points**: one point and one vector share the same grid and must both be expressed in the displayed coordinate system. A question scores one point only when both responses are correct.
 
-The position of the red axes is irrelevant for vector coordinates. Their directions define the orthonormal basis in which the colored vector must be expressed. The coordinate system is always red, while each task selects the vector color from a non-red palette. The red origin is deliberately not labelled.
+The quiz and result screens both provide a route back to the start page. Selecting the same mode resumes an unfinished round; selecting a different mode starts a fresh round in that mode.
 
-For tilted coordinate systems, the exact vector magnitude is displayed in a reserved area at the bottom right of the grid rather than beside the vector. Square roots can be entered as `sqrt(5)`, `2sqrt(5)`, `√5`, or simple LaTeX such as `\sqrt{5}`. The local parser supports only numbers, decimal separators, arithmetic operators, parentheses, and square roots; it never evaluates JavaScript.
+## Drawing And Mathematical Contract
+
+Every question shows a square unit grid and a short red one- or two-dimensional orthogonal coordinate system.
+
+### Vector-only mode
+
+- The vector representative starts and ends at grid intersections.
+- The vector tail has no point marker.
+- The red axes are oriented and labelled \(x\), and \(y\) in two dimensions.
+- No origin is shown. The fixed on-screen position of the axes is intentionally irrelevant to the vector answer.
+- The vector color is selected from a non-red palette.
+- Rotated coordinate systems remain available under the original vector probability contract.
+
+For tilted systems, the exact vector magnitude is displayed in a reserved area at the bottom right of the grid rather than beside the vector. Square roots can be entered as `sqrt(5)`, `2sqrt(5)`, `√5`, or simple LaTeX such as `\sqrt{5}`. The parser supports only numbers, decimal separators, arithmetic operators, parentheses, and square roots; it never evaluates JavaScript.
+
+### Point and mixed modes
+
+- The coordinate-system origin is selected at a grid intersection and marked with a transparent MathJax \(O\) label.
+- Red axes are horizontal or vertical only; tilted systems are never generated.
+- Axis names are omitted. Arrow directions still define the positive directions.
+- Each complete axis segment has the same short total length as the previous cardinal reference axis.
+- In one dimension, \(O\) is the midpoint of the sole red axis.
+- A point is represented by an actual colored point marker at a grid intersection and a MathJax name label.
+- A point in one dimension is representable exactly when it lies on the sole axis.
+- In mixed mode the point is kept off the vector shaft for visual clarity. The vector answer remains independent of the marked origin.
 
 ## Generation Contract
 
-The probabilities are implemented in `js/quiz-core.js` and statistically verified with a seeded sample of 100,000 tasks.
+The probabilities are implemented in `js/quiz-core.js` and statistically verified with seeded samples totalling 300,000 tasks.
 
-- `50%` of all tasks use a one-dimensional coordinate system.
+All modes use one-dimensional systems with probability `50%` and two-dimensional systems with probability `50%`.
+
+### Vector-only probabilities
+
 - Within one-dimensional tasks, `70%` of axes are horizontal or vertical and `30%` use a tilted grid slope.
-- Horizontal and vertical positive directions—right, left, up, and down—are equally likely within the cardinal one-dimensional group.
-- `30%` of one-dimensional tasks are deliberately not representable because the vector is not parallel to the sole axis. Since half of all tasks are one-dimensional, this produces `15%` non-representable tasks overall.
-- `50%` of all tasks use a two-dimensional orthogonal coordinate system.
+- Horizontal and vertical positive directions—right, left, up, and down—are equally likely within the cardinal group.
+- `30%` of one-dimensional vectors are deliberately not representable because the vector is not parallel to the sole axis. This is approximately `15%` of all vector-only questions.
 - Within two-dimensional tasks, `30%` use a rotated orthogonal system. The vector is parallel to exactly one red axis in those cases.
 - The remaining `70%` use horizontal and vertical axes. Both possible directions of each axis are independently equiprobable.
 - Tilted directions use the grid-readable slopes `±1`, `±2`, and `±1/2`, including both orientations.
 
-The axis arrows use one or two grid steps and remain below two CSS centimetres at the app's maximum layout width. All two-dimensional axis pairs are perpendicular and have equal scale.
+### Point and mixed probabilities
 
-## Quiz Flow
+- Every one-dimensional axis is horizontal or vertical, with all four orientations equally likely.
+- Every two-dimensional system uses a horizontal \(x\)-direction and vertical \(y\)-direction; both signs are independently equiprobable.
+- `30%` of one-dimensional points are deliberately placed outside the sole axis and are therefore not representable.
+- In mixed one-dimensional questions, point and vector representability are selected independently, each with a `30%` non-representable share.
+- Two-dimensional points and vectors are always representable.
 
-The app opens directly on the quiz and follows the established `trigonometric_functions` round model:
+The axis arrows remain below two CSS centimetres at the app's maximum layout width. All two-dimensional axis pairs are perpendicular and use the same scale.
+
+## Quiz Flow And Answers
+
+Every mode follows the established `trigonometric_functions` round model:
 
 - fixed rounds of 10 questions
 - first diagram visible before the round begins
@@ -46,45 +79,47 @@ The app opens directly on the quiz and follows the established `trigonometric_fu
 - unanswered questions can be skipped and score 0 points
 - each question is scored at most once
 - result screen with points and elapsed time
-- a full page reload starts fresh
+- a full page reload starts fresh on the start page
 
-One-dimensional questions show one coordinate field and a `Cannot be represented` option. Two-dimensional questions show the ordered coordinate pair as two vertically arranged fields. The inputs are enclosed in round parentheses and preceded by the same randomly selected vector symbol used in the drawing. Transparent MathJax overlays inside the fields render the matching component notation, for example \(v_x\) and \(v_y\) for vector \(v\), and disappear as soon as a value is entered. The parenthesis glyphs use a calibrated vertical offset so their visible shapes align with the input fields.
+One-dimensional objects show one coordinate field and an object-specific `Cannot be represented` option. Two-dimensional objects show an ordered coordinate pair as two vertically arranged fields. Mixed questions show separate point and vector response groups.
 
-Vector names are selected from `a`, `b`, `c`, `u`, `v`, and `w`. The coordinate-axis symbols `x`, `y`, and `z` are reserved and never used as vector names.
+All inputs are enclosed in round parentheses. Transparent MathJax overlays inside the fields render the matching component notation—for example \(P_x\), \(P_y\), \(v_x\), and \(v_y\)—and disappear as soon as a value is entered. The parenthesis glyphs use a calibrated vertical offset so their visible shapes align with the fields.
 
-Question prompts use justified text with a conventional left-aligned final line and language-aware automatic hyphenation inherited from the active document language. Discretionary break points in long subject-specific words keep the spacing balanced on narrow screens.
+Vector names are selected from `a`, `b`, `c`, `u`, `v`, and `w`. The coordinate-axis symbols `x`, `y`, and `z` are reserved and never used as vector names. Point names are selected from `A`, `B`, `C`, `P`, `Q`, and `R`; `O` is reserved for the origin.
+
+Question prompts use justified text with a conventional left-aligned final line and language-aware automatic hyphenation inherited from the active document language.
 
 ## Project Structure
 
-- `index.html`: static HTML, German fallback text, MathJax bootstrap, and versioned local assets
-- `css/styles.css`: responsive interface and transparent MathJax diagram-label overlays
+- `index.html`: start page, quiz/result markup, German fallback text, MathJax bootstrap, and versioned local assets
+- `css/styles.css`: responsive mode cards, quiz interface, and transparent MathJax overlays
 - `js/mathjax-config.js`: pinned CommonHTML MathJax configuration
-- `js/quiz-core.js`: DOM-independent generation, exact radical formatting, safe coordinate parser, and answer checking
-- `js/app.js`: localization, SVG rendering, MathJax queue, quiz state, timer, and result flow
+- `js/quiz-core.js`: DOM-independent mode generation, point incidence, exact radical formatting, safe coordinate parser, and single/mixed answer checking
+- `js/app.js`: localization, SVG rendering, MathJax queue, mode selection, quiz state, timer, and result flow
 - `scripts/verify-javascript-syntax.js`: recursive local JavaScript syntax check
-- `scripts/verify-task-generation.js`: geometry invariants and seeded probability regressions
-- `scripts/verify-answer-checker.js`: safe expression-parser and scoring regressions
-- `scripts/verify-task-flow.js`: ten-question round, skip, resume, timer, and scoring regressions
-- `scripts/verify-static-contract.js`: localization, MathJax, asset-cache, workflow, and static integration checks
+- `scripts/verify-task-generation.js`: three-mode geometry, incidence, and seeded probability regressions
+- `scripts/verify-answer-checker.js`: parser plus single-object and mixed scoring regressions
+- `scripts/verify-task-flow.js`: mode selection/resume, mixed answer, skip, timer, and ten-question regressions
+- `scripts/verify-static-contract.js`: localization, start-page, MathJax, cache, workflow, and static integration checks
 - `.github/workflows/deploy-pages.yml`: validation and GitHub Pages deployment
 
-The workspace angle-layout helper is intentionally not vendored: this app draws arrows and orthogonal basis indicators but no angle arcs, right-angle markers, or calibrated angle labels.
+The workspace angle-layout helper is intentionally not vendored: this app draws arrows and coordinate axes but no angle arcs, right-angle markers, or calibrated angle labels.
 
 ## Language Maintenance
 
-The app supports German (`de`), English (`en`), and French (`fr`). Unless a request explicitly limits a change to one language, every user-visible text change must update all three variants plus the German static HTML fallback in the same commit. This includes titles, descriptions, buttons, placeholders, ARIA labels, feedback, solutions, result text, and diagram descriptions.
+The app supports German (`de`), English (`en`), and French (`fr`). Unless a request explicitly limits a change to one language, every user-visible text change must update all three variants plus the German static HTML fallback in the same commit. This includes start-page cards, titles, descriptions, buttons, placeholders, ARIA labels, feedback, solutions, result text, and diagram descriptions.
 
-The selected language is stored in `sessionStorage` and remains consistent across the quiz and result screen.
+The selected language is stored in `sessionStorage` and remains consistent across the start, quiz, and result screens.
 
 ## MathJax And Drawing Rules
 
-Mathematical questions, vector symbols, coordinate formulas, axis names, vector names, and magnitudes use pinned MathJax `3.2.2` with TeX input and CommonHTML output. Diagram labels are transparent HTML overlays; they must not receive opaque backgrounds or text-shadow halos.
+Mathematical questions, vector symbols, point names, coordinate formulas, axis names, origins, and magnitudes use pinned MathJax `3.2.2` with TeX input and CommonHTML output. Diagram labels are transparent HTML overlays; they must not receive opaque backgrounds or text-shadow halos.
 
-The grid, vector shaft, arrowhead, and red coordinate axes are renderer-native inline SVG. The vector tail has no point marker. The SVG uses one fixed view box, while overlay coordinates are stored as percentages of that same box so responsive scaling cannot separate labels from the drawing.
+The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes are renderer-native inline SVG. The SVG uses one fixed view box, while overlay coordinates are stored as percentages of that same box so responsive scaling cannot separate labels from the drawing.
 
 ## Cache And Version Safety
 
-Current application version: `20260817.10`.
+Current application version: `20260819.1`.
 
 The version must remain identical in:
 
@@ -110,16 +145,15 @@ node scripts/verify-static-contract.js
 
 Browser verification should cover:
 
+- the three localized start-page choices and same-mode resume behavior
 - German, English, and French question, feedback, solution, and result text
-- direct quiz entry, the pre-start state, timer, answer, skip, next-question, and ten-question result flow
-- one-dimensional cardinal and tilted systems in both orientations
-- non-representable one-dimensional cases
-- standard and rotated two-dimensional systems
-- randomly selected non-red vector colors with consistently red coordinate axes
-- exact magnitude at the bottom right of the grid and square-root input
-- vector tail and tip on grid intersections, with no point marker at the tail
-- red axes remaining short, oriented, orthogonal in 2D, and correctly labelled
-- transparent MathJax overlays without stale or duplicate labels after rapid task/language changes
+- the pre-start state, timer, answer, skip, next-question, and ten-question result flow
+- vector-only one-dimensional cardinal/tilted and two-dimensional standard/rotated systems
+- point-only and mixed one-/two-dimensional cardinal systems
+- visible origin \(O\) and centered 1D axis only when a point is present
+- one-dimensional point incidence and independent mixed non-representability controls
+- point marker and vector tail remaining visually distinct
+- dynamic MathJax component labels for both object types
 - desktop, tablet, and phone widths without horizontal overflow
 
 ## GitHub Pages

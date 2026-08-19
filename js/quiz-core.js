@@ -11,7 +11,12 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260817.10';
+  const VERSION = '20260819.1';
+  const QUIZ_MODES = Object.freeze({
+    vectors: 'vectors',
+    points: 'points',
+    mixed: 'mixed'
+  });
   const CONFIG = Object.freeze({
     oneDimensionalProbability: 0.5,
     oneDimensionalCardinalProbability: 0.7,
@@ -20,7 +25,15 @@
     vectorMinColumn: 9,
     vectorMaxColumn: 21,
     vectorMinRow: 1,
-    vectorMaxRow: 11
+    vectorMaxRow: 11,
+    pointMinColumn: 1,
+    pointMaxColumn: 21,
+    pointMinRow: 1,
+    pointMaxRow: 13,
+    originMinColumn: 3,
+    originMaxColumn: 7,
+    originMinRow: 2,
+    originMaxRow: 12
   });
 
   // Coordinate-axis symbols stay reserved for component indices.
@@ -32,6 +45,14 @@
     Object.freeze({ text: 'v', latex: 'v' }),
     Object.freeze({ text: 'w', latex: 'w' })
   ]);
+  const POINT_NAMES = Object.freeze([
+    Object.freeze({ text: 'A', latex: 'A' }),
+    Object.freeze({ text: 'B', latex: 'B' }),
+    Object.freeze({ text: 'C', latex: 'C' }),
+    Object.freeze({ text: 'P', latex: 'P' }),
+    Object.freeze({ text: 'Q', latex: 'Q' }),
+    Object.freeze({ text: 'R', latex: 'R' })
+  ]);
 
   const VECTOR_COLORS = Object.freeze([
     '#145ca8',
@@ -41,12 +62,28 @@
     '#006d8f',
     '#5a6f18'
   ]);
+  const POINT_COLORS = Object.freeze([
+    '#9c2c77',
+    '#7b4f00',
+    '#08726a',
+    '#5b4bb7',
+    '#2f6d1f',
+    '#9b431d'
+  ]);
 
   const CARDINAL_DIRECTIONS = Object.freeze([
     Object.freeze({ dx: 1, dy: 0 }),
     Object.freeze({ dx: -1, dy: 0 }),
     Object.freeze({ dx: 0, dy: 1 }),
     Object.freeze({ dx: 0, dy: -1 })
+  ]);
+  const HORIZONTAL_DIRECTIONS = Object.freeze([
+    CARDINAL_DIRECTIONS[0],
+    CARDINAL_DIRECTIONS[1]
+  ]);
+  const VERTICAL_DIRECTIONS = Object.freeze([
+    CARDINAL_DIRECTIONS[2],
+    CARDINAL_DIRECTIONS[3]
   ]);
 
   // One representative per unoriented grid slope. A random sign supplies
@@ -76,16 +113,35 @@
     return random;
   }
 
+  function assertQuizMode(mode) {
+    if (!Object.values(QUIZ_MODES).includes(mode)) {
+      throw new RangeError(`Unknown quiz mode: ${mode}`);
+    }
+    return mode;
+  }
+
   function randomInt(min, max, random) {
     return Math.floor(assertRandom(random)() * (max - min + 1)) + min;
   }
 
   function randomChoice(items, random) {
+    if (!Array.isArray(items) || items.length === 0) {
+      throw new RangeError('A non-empty choice list is required.');
+    }
     return items[randomInt(0, items.length - 1, random)];
   }
 
   function randomSign(random) {
     return assertRandom(random)() < 0.5 ? -1 : 1;
+  }
+
+  function colorDistanceSquared(first, second) {
+    const firstChannels = first.match(/[0-9a-f]{2}/gi).map(channel => parseInt(channel, 16));
+    const secondChannels = second.match(/[0-9a-f]{2}/gi).map(channel => parseInt(channel, 16));
+    return firstChannels.reduce(function(total, channel, index) {
+      const difference = channel - secondChannels[index];
+      return total + difference * difference;
+    }, 0);
   }
 
   function scaleVector(vector, factor) {
@@ -172,6 +228,14 @@
     return deepFreeze({ value, latex: String(value), input: String(value) });
   }
 
+  function impossibleAnswer() {
+    return deepFreeze({ possible: false, coordinates: null });
+  }
+
+  function possibleAnswer(coordinates) {
+    return deepFreeze({ possible: true, coordinates });
+  }
+
   function randomGeneralDisplacement(random) {
     for (let attempt = 0; attempt < 200; attempt += 1) {
       const displacement = {
@@ -246,40 +310,38 @@
     return sign < 0 ? scaleVector(result, -1) : result;
   }
 
-  function buildOneDimensionalTask(random) {
+  function buildOneDimensionalVectorSpec(random) {
     const cardinal = random() < CONFIG.oneDimensionalCardinalProbability;
     const impossible = random() < CONFIG.oneDimensionalImpossibleProbability;
     const xAxis = cardinal
       ? Object.assign({}, randomChoice(CARDINAL_DIRECTIONS, random))
       : orientedDiagonalDirection(random);
     let displacement;
-    let coordinates = null;
+    let answer;
 
     if (impossible) {
       displacement = randomNonParallelDisplacement(xAxis, random);
+      answer = impossibleAnswer();
     } else {
       const parallel = randomParallelDisplacement(xAxis, random);
       displacement = parallel.displacement;
-      coordinates = [cardinal
+      answer = possibleAnswer([cardinal
         ? integerCoordinate(parallel.multiple)
-        : signedMagnitudeExact(displacement, parallel.multiple)];
+        : signedMagnitudeExact(displacement, parallel.multiple)]);
     }
 
     return {
       dimension: 1,
       systemKind: cardinal ? 'cardinal' : 'diagonal',
       isTilted: !cardinal,
-      coordinateSystem: { xAxis },
-      isCoordinatePossible: !impossible,
+      coordinateSystem: { xAxis, origin: null },
       displacement,
-      answer: {
-        possible: !impossible,
-        coordinates
-      }
+      answer,
+      parallelAxis: null
     };
   }
 
-  function buildStandardTwoDimensionalTask(random) {
+  function buildStandardVectorSpec(random) {
     const xAxis = { dx: randomSign(random), dy: 0 };
     const yAxis = { dx: 0, dy: randomSign(random) };
     const displacement = randomGeneralDisplacement(random);
@@ -287,20 +349,17 @@
       dimension: 2,
       systemKind: 'standard',
       isTilted: false,
-      coordinateSystem: { xAxis, yAxis },
-      isCoordinatePossible: true,
+      coordinateSystem: { xAxis, yAxis, origin: null },
       displacement,
-      answer: {
-        possible: true,
-        coordinates: [
-          integerCoordinate(dot(displacement, xAxis)),
-          integerCoordinate(dot(displacement, yAxis))
-        ]
-      }
+      answer: possibleAnswer([
+        integerCoordinate(dot(displacement, xAxis)),
+        integerCoordinate(dot(displacement, yAxis))
+      ]),
+      parallelAxis: null
     };
   }
 
-  function buildRotatedTwoDimensionalTask(random) {
+  function buildRotatedVectorSpec(random) {
     const xAxis = orientedDiagonalDirection(random);
     const yAxis = perpendicular(xAxis, randomSign(random));
     const selectedAxisIndex = random() < 0.5 ? 0 : 1;
@@ -308,47 +367,218 @@
     const parallel = randomParallelDisplacement(selectedAxis, random);
     const displacement = parallel.displacement;
     const nonZeroCoordinate = signedMagnitudeExact(displacement, parallel.multiple);
-    const coordinates = selectedAxisIndex === 0
-      ? [nonZeroCoordinate, integerCoordinate(0)]
-      : [integerCoordinate(0), nonZeroCoordinate];
-
     return {
       dimension: 2,
       systemKind: 'rotated',
       isTilted: true,
-      coordinateSystem: { xAxis, yAxis },
-      isCoordinatePossible: true,
+      coordinateSystem: { xAxis, yAxis, origin: null },
       displacement,
-      parallelAxis: selectedAxisIndex === 0 ? 'x' : 'y',
-      answer: { possible: true, coordinates }
+      answer: possibleAnswer(selectedAxisIndex === 0
+        ? [nonZeroCoordinate, integerCoordinate(0)]
+        : [integerCoordinate(0), nonZeroCoordinate]),
+      parallelAxis: selectedAxisIndex === 0 ? 'x' : 'y'
     };
   }
 
-  function generateTask(random = Math.random) {
-    assertRandom(random);
-    const dimension = random() < CONFIG.oneDimensionalProbability ? 1 : 2;
-    const partial = dimension === 1
-      ? buildOneDimensionalTask(random)
-      : random() < CONFIG.twoDimensionalRotatedProbability
-        ? buildRotatedTwoDimensionalTask(random)
-        : buildStandardTwoDimensionalTask(random);
-    const vector = partial.displacement;
-    const vectorName = Object.assign({}, randomChoice(VECTOR_NAMES, random));
-    const vectorPoints = placeDisplacementOnGrid(vector, random);
-    const vectorColor = randomChoice(VECTOR_COLORS, random);
-    const task = Object.assign({}, partial, {
-      vector: {
-        name: vectorName,
-        dx: vector.dx,
-        dy: vector.dy,
-        points: vectorPoints,
-        color: vectorColor
-      },
-      magnitude: magnitudeExact(vector),
-      showMagnitude: partial.isTilted
+  function createVectorEntity(spec, random) {
+    const displacement = spec.displacement;
+    return deepFreeze({
+      kind: 'vector',
+      name: Object.assign({}, randomChoice(VECTOR_NAMES, random)),
+      color: randomChoice(VECTOR_COLORS, random),
+      dx: displacement.dx,
+      dy: displacement.dy,
+      points: placeDisplacementOnGrid(displacement, random),
+      magnitude: magnitudeExact(displacement),
+      showMagnitude: spec.isTilted,
+      answer: spec.answer
     });
-    delete task.displacement;
-    return deepFreeze(task);
+  }
+
+  function generateVectorTask(random) {
+    const dimension = random() < CONFIG.oneDimensionalProbability ? 1 : 2;
+    const spec = dimension === 1
+      ? buildOneDimensionalVectorSpec(random)
+      : random() < CONFIG.twoDimensionalRotatedProbability
+        ? buildRotatedVectorSpec(random)
+        : buildStandardVectorSpec(random);
+    return deepFreeze({
+      mode: QUIZ_MODES.vectors,
+      dimension: spec.dimension,
+      systemKind: spec.systemKind,
+      isTilted: spec.isTilted,
+      coordinateSystem: spec.coordinateSystem,
+      showOrigin: false,
+      showAxisLabels: true,
+      parallelAxis: spec.parallelAxis,
+      vector: createVectorEntity(spec, random),
+      point: null
+    });
+  }
+
+  function randomOrigin(random) {
+    return {
+      column: randomInt(CONFIG.originMinColumn, CONFIG.originMaxColumn, random),
+      row: randomInt(CONFIG.originMinRow, CONFIG.originMaxRow, random)
+    };
+  }
+
+  function buildAbsoluteCoordinateSystem(dimension, random) {
+    const coordinateSystem = {
+      xAxis: dimension === 1
+        ? Object.assign({}, randomChoice(CARDINAL_DIRECTIONS, random))
+        : Object.assign({}, randomChoice(HORIZONTAL_DIRECTIONS, random)),
+      origin: randomOrigin(random)
+    };
+    if (dimension === 2) {
+      coordinateSystem.yAxis = Object.assign({}, randomChoice(VERTICAL_DIRECTIONS, random));
+    }
+    return coordinateSystem;
+  }
+
+  function buildCardinalVectorSpec(dimension, coordinateSystem, random) {
+    let displacement;
+    let answer;
+    if (dimension === 1) {
+      const impossible = random() < CONFIG.oneDimensionalImpossibleProbability;
+      if (impossible) {
+        displacement = randomNonParallelDisplacement(coordinateSystem.xAxis, random);
+        answer = impossibleAnswer();
+      } else {
+        const parallel = randomParallelDisplacement(coordinateSystem.xAxis, random);
+        displacement = parallel.displacement;
+        answer = possibleAnswer([integerCoordinate(parallel.multiple)]);
+      }
+    } else {
+      displacement = randomGeneralDisplacement(random);
+      answer = possibleAnswer([
+        integerCoordinate(dot(displacement, coordinateSystem.xAxis)),
+        integerCoordinate(dot(displacement, coordinateSystem.yAxis))
+      ]);
+    }
+    return {
+      dimension,
+      systemKind: dimension === 1 ? 'cardinal' : 'standard',
+      isTilted: false,
+      coordinateSystem,
+      displacement,
+      answer,
+      parallelAxis: null
+    };
+  }
+
+  function gridDisplacement(origin, point) {
+    return {
+      dx: point.column - origin.column,
+      dy: origin.row - point.row
+    };
+  }
+
+  function liesOnVectorSegment(point, vector) {
+    if (!vector) {
+      return false;
+    }
+    const start = vector.points.start;
+    const end = vector.points.end;
+    const firstColumn = point.column - start.column;
+    const firstRow = point.row - start.row;
+    const segmentColumn = end.column - start.column;
+    const segmentRow = end.row - start.row;
+    const collinear = firstColumn * segmentRow - firstRow * segmentColumn === 0;
+    const withinColumns = point.column >= Math.min(start.column, end.column)
+      && point.column <= Math.max(start.column, end.column);
+    const withinRows = point.row >= Math.min(start.row, end.row)
+      && point.row <= Math.max(start.row, end.row);
+    return collinear && withinColumns && withinRows;
+  }
+
+  function pointCandidates(dimension, coordinateSystem, possible, vector, avoidVector) {
+    const candidates = [];
+    for (let column = CONFIG.pointMinColumn; column <= CONFIG.pointMaxColumn; column += 1) {
+      for (let row = CONFIG.pointMinRow; row <= CONFIG.pointMaxRow; row += 1) {
+        const point = { column, row };
+        const displacement = gridDisplacement(coordinateSystem.origin, point);
+        const distanceSquared = squaredLength(displacement);
+        if (distanceSquared < 4) {
+          continue;
+        }
+        const onAxis = isParallel(displacement, coordinateSystem.xAxis);
+        if (dimension === 1 && onAxis !== possible) {
+          continue;
+        }
+        if (avoidVector && liesOnVectorSegment(point, vector)) {
+          continue;
+        }
+        candidates.push(point);
+      }
+    }
+    return candidates;
+  }
+
+  function createPointEntity(dimension, coordinateSystem, random, vector) {
+    const possible = dimension === 2
+      || random() >= CONFIG.oneDimensionalImpossibleProbability;
+    let candidates = pointCandidates(dimension, coordinateSystem, possible, vector, true);
+    if (candidates.length === 0) {
+      candidates = pointCandidates(dimension, coordinateSystem, possible, vector, false);
+    }
+    const position = Object.assign({}, randomChoice(candidates, random));
+    const displacement = gridDisplacement(coordinateSystem.origin, position);
+    const coordinates = possible
+      ? dimension === 1
+        ? [integerCoordinate(dot(displacement, coordinateSystem.xAxis))]
+        : [
+            integerCoordinate(dot(displacement, coordinateSystem.xAxis)),
+            integerCoordinate(dot(displacement, coordinateSystem.yAxis))
+          ]
+      : null;
+    const availableColors = POINT_COLORS.filter(function(color) {
+      return !vector || colorDistanceSquared(color, vector.color) >= 6400;
+    });
+    return deepFreeze({
+      kind: 'point',
+      name: Object.assign({}, randomChoice(POINT_NAMES, random)),
+      color: randomChoice(availableColors, random),
+      position,
+      displacement,
+      answer: possible ? possibleAnswer(coordinates) : impossibleAnswer()
+    });
+  }
+
+  function generateAbsoluteTask(mode, random) {
+    const dimension = random() < CONFIG.oneDimensionalProbability ? 1 : 2;
+    const coordinateSystem = buildAbsoluteCoordinateSystem(dimension, random);
+    const vector = mode === QUIZ_MODES.mixed
+      ? createVectorEntity(
+          buildCardinalVectorSpec(dimension, coordinateSystem, random),
+          random
+        )
+      : null;
+    const point = createPointEntity(dimension, coordinateSystem, random, vector);
+    return deepFreeze({
+      mode,
+      dimension,
+      systemKind: dimension === 1 ? 'cardinal' : 'standard',
+      isTilted: false,
+      coordinateSystem,
+      showOrigin: true,
+      showAxisLabels: false,
+      parallelAxis: null,
+      vector,
+      point
+    });
+  }
+
+  function generateTask(mode = QUIZ_MODES.vectors, random = Math.random) {
+    if (typeof mode === 'function') {
+      random = mode;
+      mode = QUIZ_MODES.vectors;
+    }
+    assertQuizMode(mode);
+    assertRandom(random);
+    return mode === QUIZ_MODES.vectors
+      ? generateVectorTask(random)
+      : generateAbsoluteTask(mode, random);
   }
 
   function normalizeExpression(rawValue) {
@@ -486,11 +716,8 @@
     }
   }
 
-  function checkAnswer(task, rawCoordinates, impossibleSelected) {
-    if (!task || !task.answer) {
-      throw new TypeError('A generated task is required.');
-    }
-    if (!task.answer.possible) {
+  function checkExpectedAnswer(answer, dimension, rawCoordinates, impossibleSelected) {
+    if (!answer.possible) {
       return deepFreeze({
         correct: Boolean(impossibleSelected),
         invalidInput: false
@@ -499,7 +726,7 @@
     if (impossibleSelected) {
       return deepFreeze({ correct: false, invalidInput: false });
     }
-    if (!Array.isArray(rawCoordinates) || rawCoordinates.length !== task.dimension) {
+    if (!Array.isArray(rawCoordinates) || rawCoordinates.length !== dimension) {
       return deepFreeze({ correct: false, invalidInput: true });
     }
     const parsed = rawCoordinates.map(parseCoordinateExpression);
@@ -507,34 +734,98 @@
       return deepFreeze({ correct: false, invalidInput: true });
     }
     const correct = parsed.every(function(value, coordinateIndex) {
-      const expected = task.answer.coordinates[coordinateIndex].value;
+      const expected = answer.coordinates[coordinateIndex].value;
       return Math.abs(value - expected) <= 1e-8 * Math.max(1, Math.abs(expected));
     });
     return deepFreeze({ correct, invalidInput: false });
   }
 
-  function coordinateVectorLatex(task) {
-    if (!task.answer.possible) {
+  function checkObjectAnswer(task, objectKind, rawCoordinates, impossibleSelected) {
+    if (!task || !['vector', 'point'].includes(objectKind) || !task[objectKind]) {
+      throw new TypeError(`Task does not contain a ${objectKind}.`);
+    }
+    return checkExpectedAnswer(
+      task[objectKind].answer,
+      task.dimension,
+      rawCoordinates,
+      impossibleSelected
+    );
+  }
+
+  function checkTaskAnswer(task, submissions) {
+    if (!task || (!task.vector && !task.point)) {
+      throw new TypeError('A generated task is required.');
+    }
+    const objectResults = {};
+    for (const objectKind of ['point', 'vector']) {
+      if (!task[objectKind]) {
+        continue;
+      }
+      const submission = submissions && submissions[objectKind]
+        ? submissions[objectKind]
+        : {};
+      objectResults[objectKind] = checkObjectAnswer(
+        task,
+        objectKind,
+        submission.coordinates,
+        submission.impossibleSelected
+      );
+    }
+    const results = Object.values(objectResults);
+    return deepFreeze({
+      correct: results.every(result => result.correct),
+      invalidInput: results.some(result => result.invalidInput),
+      objectResults
+    });
+  }
+
+  // Backwards-compatible helper for a single-object task.
+  function checkAnswer(task, rawCoordinates, impossibleSelected) {
+    const objectKinds = ['vector', 'point'].filter(kind => task && task[kind]);
+    if (objectKinds.length !== 1) {
+      throw new TypeError('checkAnswer requires a single-object task.');
+    }
+    return checkObjectAnswer(task, objectKinds[0], rawCoordinates, impossibleSelected);
+  }
+
+  function coordinateObjectLatex(task, objectKind) {
+    if (!task || !task[objectKind] || !task[objectKind].answer.possible) {
       return null;
     }
-    const rows = task.answer.coordinates.map(function(coordinate) {
+    const rows = task[objectKind].answer.coordinates.map(function(coordinate) {
       return coordinate.latex;
     }).join('\\\\');
     return `\\begin{pmatrix}${rows}\\end{pmatrix}`;
   }
 
+  function coordinateVectorLatex(task) {
+    return coordinateObjectLatex(task, 'vector');
+  }
+
+  function coordinatePointLatex(task) {
+    return coordinateObjectLatex(task, 'point');
+  }
+
   return deepFreeze({
     VERSION,
+    QUIZ_MODES,
     CONFIG,
     VECTOR_NAMES,
+    POINT_NAMES,
     VECTOR_COLORS,
+    POINT_COLORS,
     CARDINAL_DIRECTIONS,
     DIAGONAL_DIRECTIONS,
     generateTask,
     checkAnswer,
+    checkObjectAnswer,
+    checkTaskAnswer,
     parseCoordinateExpression,
+    coordinateObjectLatex,
     coordinateVectorLatex,
+    coordinatePointLatex,
     magnitudeExact,
+    gridDisplacement,
     isParallel,
     dot,
     cross,

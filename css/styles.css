@@ -11,6 +11,8 @@
   --accent-soft: #e9f2fc;
   --vector: #145ca8;
   --vector-color: var(--vector);
+  --point: #9c2c77;
+  --point-color: var(--point);
   --axes: #cf2f3f;
   --success: #18733a;
   --success-soft: #edf8f0;
@@ -173,6 +175,57 @@ p {
   line-height: 1;
 }
 
+.intro-screen {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+}
+
+.intro-panel {
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.intro-field-title {
+  margin-bottom: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.intro-choice-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.intro-choice {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+  min-height: 136px;
+  padding: 18px;
+  text-align: left;
+  border-color: var(--border);
+  border-radius: 13px;
+}
+
+.intro-choice:hover:not(:disabled),
+.intro-choice:focus-visible {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(21, 89, 166, 0.11);
+}
+
+.intro-choice-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.intro-choice-description {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
 .result-screen {
   width: min(860px, 100%);
   margin: 0 auto;
@@ -199,7 +252,7 @@ p {
 
 .quiz-top-row {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
 }
@@ -253,6 +306,14 @@ p {
   border-radius: 999px;
 }
 
+.legend-point {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--point-color);
+}
+
 .vector-swatch {
   border-color: var(--vector-color);
 }
@@ -302,9 +363,19 @@ p {
   font-size: clamp(18px, 2.5vw, 24px);
 }
 
+.diagram-label-point {
+  color: var(--point-color);
+  font-size: clamp(18px, 2.5vw, 24px);
+}
+
 .diagram-label-axis {
   color: var(--axes);
   font-size: clamp(16px, 2.25vw, 21px);
+}
+
+.diagram-label-origin {
+  color: var(--axes);
+  font-size: clamp(15px, 2.1vw, 20px);
 }
 
 .diagram-label-magnitude {
@@ -395,6 +466,16 @@ p {
   padding: 0 6px;
   font-size: 0.92rem;
   font-weight: 800;
+}
+
+.object-answer-group {
+  display: grid;
+  gap: 9px;
+}
+
+.object-answer-group + .object-answer-group {
+  padding-top: 13px;
+  border-top: 1px solid var(--border);
 }
 
 .coordinate-answer-entry {
@@ -555,6 +636,17 @@ p {
   line-height: 1.5;
 }
 
+.solution-object {
+  display: grid;
+  gap: 4px;
+  margin-top: 9px;
+}
+
+.solution-object + .solution-object {
+  padding-top: 9px;
+  border-top: 1px solid var(--border);
+}
+
 .result-panel {
   display: grid;
   gap: 13px;
@@ -607,6 +699,10 @@ p {
   }
 
   .quiz-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .intro-choice-list {
     grid-template-columns: 1fr;
   }
 
