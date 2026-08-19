@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.3';
+const APP_VERSION = '20260819.4';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -592,11 +592,11 @@ function gridPoint(column, row) {
   };
 }
 
-function screenDirection(direction, cardinalLength) {
+function screenDirection(direction, cardinalLength, lengthScale = 1) {
   const factor = cardinalLength && (direction.dx === 0 || direction.dy === 0) ? 2 : 1;
   return {
-    x: direction.dx * DIAGRAM.gridCell * factor,
-    y: -direction.dy * DIAGRAM.gridCell * factor
+    x: direction.dx * DIAGRAM.gridCell * factor * lengthScale,
+    y: -direction.dy * DIAGRAM.gridCell * factor * lengthScale
   };
 }
 
@@ -698,6 +698,28 @@ function coordinateSystemOrigin(task) {
   return gridPoint(origin.column, origin.row);
 }
 
+function originLabelPoint(task, origin) {
+  if (task.dimension === 2) {
+    return { x: origin.x - 10, y: origin.y + 12 };
+  }
+  const axisDirection = screenDirection(task.coordinateSystem.xAxis, false);
+  const axisLength = Math.hypot(axisDirection.x, axisDirection.y);
+  let perpendicular = {
+    x: -axisDirection.y / axisLength,
+    y: axisDirection.x / axisLength
+  };
+  if (
+    (Math.abs(perpendicular.y) >= Math.abs(perpendicular.x) && perpendicular.y < 0)
+    || (Math.abs(perpendicular.x) > Math.abs(perpendicular.y) && perpendicular.x > 0)
+  ) {
+    perpendicular = { x: -perpendicular.x, y: -perpendicular.y };
+  }
+  return {
+    x: origin.x + perpendicular.x * 18,
+    y: origin.y + perpendicular.y * 18
+  };
+}
+
 function appendCoordinateAxes(svg, task, labelContainer) {
   const origin = coordinateSystemOrigin(task);
   const axisEntries = [{ name: 'x', direction: task.coordinateSystem.xAxis }];
@@ -705,7 +727,7 @@ function appendCoordinateAxes(svg, task, labelContainer) {
     axisEntries.push({ name: 'y', direction: task.coordinateSystem.yAxis });
   }
   axisEntries.forEach(function(axis) {
-    const direction = screenDirection(axis.direction, true);
+    const direction = screenDirection(axis.direction, true, task.axisLengthScale);
     const start = task.showOrigin
       ? { x: origin.x - direction.x / 2, y: origin.y - direction.y / 2 }
       : origin;
@@ -738,18 +760,16 @@ function appendCoordinateAxes(svg, task, labelContainer) {
     }
   });
   if (task.showOrigin) {
-    if (task.dimension === 1) {
-      svg.appendChild(createSvgElement('circle', {
-        class: 'origin-marker',
-        cx: origin.x,
-        cy: origin.y,
-        r: 5,
-        fill: AXIS_COLOR
-      }));
-    }
+    svg.appendChild(createSvgElement('circle', {
+      class: 'origin-marker',
+      cx: origin.x,
+      cy: origin.y,
+      r: 5,
+      fill: AXIS_COLOR
+    }));
     addDiagramLabel(
       labelContainer,
-      { x: origin.x - 14, y: origin.y + 17 },
+      originLabelPoint(task, origin),
       'diagram-label-origin',
       '\\(O\\)'
     );

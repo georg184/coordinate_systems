@@ -62,6 +62,8 @@ function colorDistanceSquared(first, second) {
 }
 
 function verifyCoordinateSystem(task) {
+  assert.ok(task.axisLengthScale >= quizCore.CONFIG.axisLengthScaleMin);
+  assert.ok(task.axisLengthScale <= quizCore.CONFIG.axisLengthScaleMax);
   const xAxis = task.coordinateSystem.xAxis;
   assert.ok(quizCore.squaredLength(xAxis) > 0);
   if (task.dimension === 2) {
@@ -244,11 +246,21 @@ function freshCounts() {
     ),
     standardCount: 0,
     standardXPositive: 0,
-    standardYPositive: 0
+    standardYPositive: 0,
+    axisLengthScaleTotal: 0,
+    axisLengthScaleBins: [0, 0, 0]
   };
 }
 
 function collect(task, counts) {
+  counts.axisLengthScaleTotal += task.axisLengthScale;
+  const normalizedLengthScale = (
+    task.axisLengthScale - quizCore.CONFIG.axisLengthScaleMin
+  ) / (
+    quizCore.CONFIG.axisLengthScaleMax - quizCore.CONFIG.axisLengthScaleMin
+  );
+  const lengthScaleBin = Math.min(2, Math.floor(normalizedLengthScale * 3));
+  counts.axisLengthScaleBins[lengthScaleBin] += 1;
   if (task.dimension === 1) {
     counts.oneDimensional += 1;
     if (task.systemKind === 'cardinal') {
@@ -279,6 +291,20 @@ function collect(task, counts) {
 }
 
 function verifyProbabilityContracts(mode, counts, sampleSize) {
+  assertNear(
+    counts.axisLengthScaleTotal / sampleSize,
+    1.3,
+    0.004,
+    `${mode} mean axis-length scale`
+  );
+  counts.axisLengthScaleBins.forEach(function(count, index) {
+    assertNear(
+      count / sampleSize,
+      1 / 3,
+      0.008,
+      `${mode} uniform axis-length bin ${index + 1}`
+    );
+  });
   assertNear(counts.oneDimensional / sampleSize, 0.5, 0.006, `${mode} 1D share`);
   if (mode === quizCore.QUIZ_MODES.vectors) {
     assertNear(

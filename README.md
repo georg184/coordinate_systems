@@ -38,8 +38,9 @@ For tilted systems, the exact vector magnitude is displayed in a reserved area a
 - The coordinate-system origin is selected at a grid intersection and marked with a transparent MathJax \(O\) label.
 - Red axes are horizontal or vertical only; tilted systems are never generated.
 - The oriented axes are labelled \(x\), and \(y\) in two dimensions.
-- Each complete axis segment has the same short total length as the previous cardinal reference axis.
-- In one dimension, \(O\) is the midpoint of the sole red axis and is additionally marked by a solid red point without an outline.
+- Both axes in a two-dimensional system use the same randomly selected display length.
+- In one dimension, \(O\) is the midpoint of the sole red axis, is marked by a solid red point without an outline, and its label lies on the perpendicular line through that point.
+- In two dimensions, the axes' intersection has the same red origin point and the \(O\) label is placed close beside it.
 - A point is represented by an actual colored point marker at a grid intersection and a MathJax name label.
 - A point in one dimension is representable exactly when it lies on the sole axis.
 - In mixed mode the point is kept off the vector shaft for visual clarity. The vector answer remains independent of the marked origin.
@@ -67,7 +68,7 @@ All modes use one-dimensional systems with probability `50%` and two-dimensional
 - In mixed one-dimensional questions, point and vector representability are selected independently, each with a `30%` non-representable share.
 - Two-dimensional points and vectors are always representable.
 
-The axis arrows remain below two CSS centimetres at the app's maximum layout width. All two-dimensional axis pairs are perpendicular and use the same scale.
+Every task selects one axis-length factor uniformly from `1.0` through `1.6`. The former length is therefore the minimum, the expected mean is `1.3`, and both axes of a two-dimensional system share the same factor. This visual variation does not change the coordinate unit. All two-dimensional axis pairs are perpendicular and use the same coordinate scale.
 
 ## Quiz Flow And Answers
 
@@ -119,7 +120,7 @@ The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes 
 
 ## Cache And Version Safety
 
-Current application version: `20260819.3`.
+Current application version: `20260819.4`.
 
 The version must remain identical in:
 
@@ -150,7 +151,8 @@ Browser verification should cover:
 - the pre-start state, timer, answer, skip, next-question, and ten-question result flow
 - vector-only one-dimensional cardinal/tilted and two-dimensional standard/rotated systems
 - point-only and mixed one-/two-dimensional cardinal systems
-- visible origin \(O\), a red 1D origin marker, and labelled axes when a point is present
+- a red origin marker in both dimensions, orthogonal 1D and close 2D \(O\)-label placement, and labelled axes when a point is present
+- uniformly varied axis lengths from `1.0` through `1.6`, with matching lengths in two dimensions
 - one-dimensional point incidence and independent mixed non-representability controls
 - point marker and vector tail remaining visually distinct
 - dynamic MathJax component labels for both object types

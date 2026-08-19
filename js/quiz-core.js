@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260819.3';
+  const VERSION = '20260819.4';
   const QUIZ_MODES = Object.freeze({
     vectors: 'vectors',
     points: 'points',
@@ -22,6 +22,8 @@
     oneDimensionalCardinalProbability: 0.7,
     oneDimensionalImpossibleProbability: 0.3,
     twoDimensionalRotatedProbability: 0.3,
+    axisLengthScaleMin: 1,
+    axisLengthScaleMax: 1.6,
     vectorMinColumn: 9,
     vectorMaxColumn: 21,
     vectorMinRow: 1,
@@ -133,6 +135,11 @@
 
   function randomSign(random) {
     return assertRandom(random)() < 0.5 ? -1 : 1;
+  }
+
+  function randomAxisLengthScale(random) {
+    return CONFIG.axisLengthScaleMin
+      + assertRandom(random)() * (CONFIG.axisLengthScaleMax - CONFIG.axisLengthScaleMin);
   }
 
   function colorDistanceSquared(first, second) {
@@ -402,12 +409,14 @@
       : random() < CONFIG.twoDimensionalRotatedProbability
         ? buildRotatedVectorSpec(random)
         : buildStandardVectorSpec(random);
+    const axisLengthScale = randomAxisLengthScale(random);
     return deepFreeze({
       mode: QUIZ_MODES.vectors,
       dimension: spec.dimension,
       systemKind: spec.systemKind,
       isTilted: spec.isTilted,
       coordinateSystem: spec.coordinateSystem,
+      axisLengthScale,
       showOrigin: false,
       showAxisLabels: true,
       parallelAxis: spec.parallelAxis,
@@ -548,6 +557,7 @@
   function generateAbsoluteTask(mode, random) {
     const dimension = random() < CONFIG.oneDimensionalProbability ? 1 : 2;
     const coordinateSystem = buildAbsoluteCoordinateSystem(dimension, random);
+    const axisLengthScale = randomAxisLengthScale(random);
     const vector = mode === QUIZ_MODES.mixed
       ? createVectorEntity(
           buildCardinalVectorSpec(dimension, coordinateSystem, random),
@@ -561,6 +571,7 @@
       systemKind: dimension === 1 ? 'cardinal' : 'standard',
       isTilted: false,
       coordinateSystem,
+      axisLengthScale,
       showOrigin: true,
       showAxisLabels: true,
       parallelAxis: null,
