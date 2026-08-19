@@ -39,7 +39,7 @@ For tilted systems, the exact vector magnitude is displayed in a reserved area a
 - Red axes are horizontal or vertical only; tilted systems are never generated.
 - The oriented axes are labelled \(x\), and \(y\) in two dimensions.
 - Each complete axis segment has the same short total length as the previous cardinal reference axis.
-- In one dimension, \(O\) is the midpoint of the sole red axis and is additionally marked by a visible red point.
+- In one dimension, \(O\) is the midpoint of the sole red axis and is additionally marked by a solid red point without an outline.
 - A point is represented by an actual colored point marker at a grid intersection and a MathJax name label.
 - A point in one dimension is representable exactly when it lies on the sole axis.
 - In mixed mode the point is kept off the vector shaft for visual clarity. The vector answer remains independent of the marked origin.
@@ -119,7 +119,7 @@ The grid, vector shaft, vector arrowhead, point marker, and red coordinate axes 
 
 ## Cache And Version Safety
 
-Current application version: `20260819.2`.
+Current application version: `20260819.3`.
 
 The version must remain identical in:
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const APP_VERSION = '20260819.2';
+const APP_VERSION = '20260819.3';
 const VERSION_MISMATCH_TEXT = {
   de: {
     title: 'Neue Version verfügbar',
@@ -744,10 +744,7 @@ function appendCoordinateAxes(svg, task, labelContainer) {
         cx: origin.x,
         cy: origin.y,
         r: 5,
-        fill: AXIS_COLOR,
-        stroke: '#ffffff',
-        'stroke-width': 2,
-        'vector-effect': 'non-scaling-stroke'
+        fill: AXIS_COLOR
       }));
     }
     addDiagramLabel(

@@ -11,7 +11,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function() {
   'use strict';
 
-  const VERSION = '20260819.2';
+  const VERSION = '20260819.3';
   const QUIZ_MODES = Object.freeze({
     vectors: 'vectors',
     points: 'points',
